@@ -1,28 +1,30 @@
 export default defineAppConfig({
-    ui: {
-      colors: {
-        primary: 'blue'
+  ui: {
+    colors: {
+      primary: 'blue'
+    },
+    button: {
+      defaultVariants: {
+        size: 'lg'
+      }
+    },
+    select: {
+      defaultVariants: {
+        size: 'lg'
+      }
+    },
+    input: {
+      slots: {
+        root: 'w-full'
       },
-      button: {
-        defaultVariants: {
-          size: 'lg'
-        }
-      },
-      select: {
-        defaultVariants: {
-          size: 'lg'
-        }
-      },
-      input: {
-        defaultVariants: {
-          size: 'lg'
-        }
-      },
-      textarea: {
-        defaultVariants: {
-          size: 'lg'
-        }
+      defaultVariants: {
+        size: 'lg'
+      }
+    },
+    textarea: {
+      defaultVariants: {
+        size: 'lg'
       }
     }
-  })
-  
+  }
+})
