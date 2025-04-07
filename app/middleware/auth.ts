@@ -1,11 +1,23 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const userStore = useUserStore()
 
-  if (!userStore.profile) {
-    await userStore.fetchProfile()
+  if (to.path === '/login') {
+    if (userStore.isLoggedIn) {
+      return navigateTo('/dashboard')
+    }
+    return
   }
 
-  if (!userStore.isLoggedIn && to.path !== '/login') {
-    return navigateTo('/login')
+  if (!userStore.isLoggedIn) {
+    try {
+      await userStore.fetchProfile()
+
+      if (!userStore.isLoggedIn) {
+        return navigateTo('/login')
+      }
+    } catch (error) {
+      console.error('Auth middleware error:', error)
+      return navigateTo('/login')
+    }
   }
 })

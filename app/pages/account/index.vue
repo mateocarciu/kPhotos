@@ -114,7 +114,8 @@
                             <div class="flex justify-between items-center">
                                 <div>
                                     <h3 class="font-medium">Last password change</h3>
-                                    <p class="text-sm text-gray-500">{{ formatDate(user?.date_last_change_password) }}
+                                    <p class="text-sm text-gray-500">{{ user?.date_last_change_password ?
+                                        formatDate(user.date_last_change_password) : 'N/A' }}
                                     </p>
                                 </div>
                                 <UButton size="sm" color="neutral" variant="ghost" icon="i-heroicons-key">
@@ -143,11 +144,13 @@
                         <div class="space-y-3">
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Last login</span>
-                                <span class="font-medium">{{ formatDate(user?.last_login_at) }}</span>
+                                <span class="font-medium">{{ user?.last_login_at ? formatDate(user.last_login_at) :
+                                    'N/A' }}</span>
                             </div>
                             <div class="flex justify-between">
                                 <span class="text-gray-500">Last admin login</span>
-                                <span class="font-medium">{{ formatDate(user?.administration_last_login_at) }}</span>
+                                <span class="font-medium">{{ user?.administration_last_login_at ?
+                                    formatDate(user.administration_last_login_at) : 'N/A' }}</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-gray-500">Login notification</span>
@@ -229,7 +232,7 @@ const cancelEdit = () => {
 
 // Format last login date
 const formatDate = (timestamp: number) => {
-    return new Date(timestamp * 1000).toLocaleDateString('en-US', {
+    return new Date(timestamp * 1000).toLocaleDateString('fr-FR', {
         day: 'numeric',
         month: 'long',
         year: 'numeric',

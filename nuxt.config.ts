@@ -13,12 +13,6 @@ export default defineNuxtConfig({
 
   modules: ['@nuxt/ui', '@nuxt/eslint', '@nuxt/icon', '@nuxt/image', '@nuxt/test-utils', '@nuxt/fonts', '@pinia/nuxt'],
 
-  // runtimeConfig: {
-  //   public: {
-  //     infomaniakClientApi: process.env.NUXT_INFOMANIAK_CLIENT_API
-  //   }
-  // },
-
   css: ['~/assets/css/main.css'],
 
   future: {
