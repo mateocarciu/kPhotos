@@ -2,8 +2,9 @@
 import { UForm } from '#components'
 
 const userStore = useUserStore()
+const { isLoading } = useUser()
+
 const token = ref('')
-const isLoading = ref(false)
 const toast = useToast()
 
 if (userStore.isLoggedIn) {
@@ -19,9 +20,7 @@ const handleLogin = async () => {
         })
         return
     }
-    isLoading.value = true
     await userStore.login(token.value)
-    isLoading.value = false
 }
 
 </script>

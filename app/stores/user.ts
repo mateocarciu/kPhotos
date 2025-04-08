@@ -20,10 +20,10 @@ export const useUserStore = defineStore('user', {
 
     async fetchProfile() {
       if (this.isLoading) return
-      
+
       this.isLoading = true
       this.error = null
-      
+
       try {
         const response = await $fetch<{ profile: UserProfile }>('/api/profile')
         if (response?.profile) {
@@ -43,45 +43,65 @@ export const useUserStore = defineStore('user', {
       }
     },
     async login(token: string) {
+      const toast = useToast()
       this.isLoading = true
       this.error = null
-      
+
       try {
         const response = await $fetch<{ profile: UserProfile }>('/api/auth/login', {
           method: 'POST',
           body: { token }
         })
-        
+
         if (response?.profile) {
           this.profile = response.profile
+
+          this.profile = response?.profile
           navigateTo('/dashboard')
-        } else {
-          throw new Error('No profile data received')
+          toast.add({
+            title: 'Success',
+            description: 'Login successful',
+            color: 'success'
+          })
         }
       } catch (err) {
         console.error('Login failed:', err)
         this.error = 'Login failed'
-        throw err
-      } finally {
+        toast.add({
+          title: 'Erreur de connexion',
+          description: 'Unable to login with the provided token',
+          color: 'error'
+        })
         this.isLoading = false
+        throw err
       }
     },
     async logout() {
+      const toast = useToast()
       this.isLoading = true
       this.error = null
-      
+
       try {
         await $fetch('/api/auth/logout', {
           method: 'POST'
         })
         this.clearProfile()
+
+        toast.add({
+          title: 'Success',
+          description: 'Logout successful',
+          color: 'success'
+        })
         navigateTo('/login')
       } catch (err) {
         console.error('Logout failed:', err)
+        toast.add({
+          title: 'An error occurred',
+          description: 'Logout failed',
+          color: 'error'
+        })
         this.error = 'Logout failed'
         throw err
-      } finally {
-        this.isLoading = false
       }
     }
   }

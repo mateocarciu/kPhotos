@@ -3,6 +3,7 @@ export const useUser = () => {
 
   return {
     user: computed(() => userStore.getProfile),
-    isLoggedIn: computed(() => userStore.isLoggedIn)
+    isLoggedIn: computed(() => userStore.isLoggedIn),
+    isLoading: computed(() => userStore.isLoading)
   }
 }
