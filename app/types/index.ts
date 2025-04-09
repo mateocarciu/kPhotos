@@ -139,14 +139,10 @@ export interface UserStoreState {
   profile: UserProfile | null
   isLoading: boolean
   error: string | null
-  isInitialized: boolean
-  isInitializing: boolean
 }
 
 export interface DriveStoreState {
   files: DriveFile[]
   isLoading: boolean
   error: string | null
-  currentPath: string
-  currentFolder: DriveFile | null
 }

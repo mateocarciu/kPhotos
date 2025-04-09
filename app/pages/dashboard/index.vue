@@ -2,7 +2,6 @@
     <div>
         <div class="my-8">
             <h1 class="text-2xl font-bold mb-4">My Files</h1>
-
             <div v-if="isLoading" class="flex justify-center">
                 <UIcon name="i-heroicons-arrow-path" class="h-8 w-8 animate-spin" />
             </div>
@@ -38,19 +37,13 @@
 <script setup lang="ts">
 import type { DriveFile } from '~/types'
 
-definePageMeta({
-    middleware: ['auth'],
-});
 
 const { files, isLoading, error, fetchFiles } = useDrive()
 
-onMounted(async () => {
-    try {
-        await fetchFiles()
-    } catch (err) {
-        console.error('Failed to fetch files:', err)
-    }
-})
+// onMounted(() => {
+//     fetchFiles()
+// })
+fetchFiles()
 
 const handleFileClick = (file: DriveFile) => {
     if (file.type === 'dir') {

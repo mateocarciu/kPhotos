@@ -1,43 +1,31 @@
-import type { DriveFile, DriveResponse, DriveStoreState } from '~/types'
+import type { DriveFile } from '~/types'
+import * as driveService from '~/services/driveService'
 
 export const useDriveStore = defineStore('drive', {
-  state: (): DriveStoreState => ({
-    files: [],
+  state: () => ({
+    files: [] as DriveFile[],
     isLoading: false,
-    error: null,
-    currentPath: '/',
-    currentFolder: null
+    error: null as string | null
   }),
-  
+
   getters: {
-    getFiles: (state) => state.files,
-    getCurrentPath: (state) => state.currentPath,
-    getCurrentFolder: (state) => state.currentFolder
+    getFiles: (state) => state.files
   },
-  
+
   actions: {
     async fetchFiles() {
       this.isLoading = true
       this.error = null
-      
+
       try {
-        const response = await $fetch<DriveResponse>('/api/drives')
-        this.files = response.data
+        const res = await driveService.fetchFiles()
+        this.files = res?.data?.data as unknown as DriveFile[]
       } catch (err) {
-        console.error('Failed to fetch files:', err)
         this.error = 'Failed to fetch files'
-        throw err
+        console.error('Drive fetch error:', err)
       } finally {
         this.isLoading = false
       }
-    },
-    
-    setCurrentPath(path: string) {
-      this.currentPath = path
-    },
-    
-    setCurrentFolder(folder: DriveFile | null) {
-      this.currentFolder = folder
     }
   }
 })

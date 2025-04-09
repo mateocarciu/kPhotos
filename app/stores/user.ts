@@ -1,108 +1,41 @@
-import type { UserProfile, UserStoreState } from '~/types'
+import { fetchProfile, login, logout } from '~/services/userService'
+import type { UserProfile } from '~/types'
 
 export const useUserStore = defineStore('user', {
-  state: (): UserStoreState => ({
-    profile: null,
-    isLoading: false,
-    error: null,
-    isInitialized: false,
-    isInitializing: true
+  state: () => ({
+    profile: null as UserProfile | null,
+    isLoading: false
   }),
   getters: {
-    isLoggedIn: (state) => !!state.profile,
-    getProfile: (state) => state.profile
+    isLoggedIn: (state) => !!state.profile
   },
   actions: {
     clearProfile() {
       this.profile = null
-      this.error = null
     },
-
     async fetchProfile() {
-      if (this.isLoading) return
-
       this.isLoading = true
-      this.error = null
-
-      try {
-        const response = await $fetch<{ profile: UserProfile }>('/api/profile')
-        if (response?.profile) {
-          this.profile = response.profile
-        } else {
-          throw new Error('No profile data received')
-        }
-      } catch (err) {
-        console.error('Failed to fetch profile:', err)
-        this.error = 'Failed to fetch profile'
-        this.clearProfile()
-        throw err
-      } finally {
-        this.isLoading = false
-        this.isInitialized = true
-        this.isInitializing = false
-      }
+      const { data } = await fetchProfile()
+      if (data?.profile) this.profile = data.profile
+      this.isLoading = false
     },
     async login(token: string) {
       const toast = useToast()
       this.isLoading = true
-      this.error = null
-
-      try {
-        const response = await $fetch<{ profile: UserProfile }>('/api/auth/login', {
-          method: 'POST',
-          body: { token }
-        })
-
-        if (response?.profile) {
-          this.profile = response.profile
-
-          this.profile = response?.profile
-          navigateTo('/dashboard')
-          toast.add({
-            title: 'Success',
-            description: 'Login successful',
-            color: 'success'
-          })
-        }
-      } catch (err) {
-        console.error('Login failed:', err)
-        this.error = 'Login failed'
-        toast.add({
-          title: 'Erreur de connexion',
-          description: 'Unable to login with the provided token',
-          color: 'error'
-        })
-        this.isLoading = false
-        throw err
+      const { data, error } = await login(token)
+      if (data?.profile) {
+        this.profile = data.profile
+        toast.add({ title: 'Logged in', color: 'success' })
+        navigateTo('/dashboard')
+      } else {
+        toast.add({ title: 'Login failed', color: 'error' })
       }
+      this.isLoading = false
     },
     async logout() {
-      const toast = useToast()
-      this.isLoading = true
-      this.error = null
-
-      try {
-        await $fetch('/api/auth/logout', {
-          method: 'POST'
-        })
-        this.clearProfile()
-
-        toast.add({
-          title: 'Success',
-          description: 'Logout successful',
-          color: 'success'
-        })
-        navigateTo('/login')
-      } catch (err) {
-        console.error('Logout failed:', err)
-        toast.add({
-          title: 'An error occurred',
-          description: 'Logout failed',
-          color: 'error'
-        })
-        this.error = 'Logout failed'
-        throw err
-      }
+      await logout()
+      this.clearProfile()
+      navigateTo('/login')
     }
   }
 })

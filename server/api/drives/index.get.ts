@@ -23,8 +23,7 @@ export default defineEventHandler(async (event) => {
     })
 
     return filesResponse
-  } catch (error) {
-    console.error('Error fetching drives:', error)
-    throw createError({ statusCode: 500, message: 'Failed to fetch drives' })
+  } catch (error: any) {
+    throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch drives' })
   }
 })

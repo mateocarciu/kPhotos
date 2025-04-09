@@ -6,7 +6,7 @@
       class="inline-flex size-[2.375rem] flex-shrink-0 items-center justify-center gap-2 rounded-full bg-white align-middle text-xs font-medium text-neutral-700 transition-all hover:bg-neutral-50 focus:outline-none dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-slate-800 dark:hover:text-white">
       <UChip inset>
         <UAvatar :ui="{ root: 'ring-2 ring-gray-200 dark:ring-gray-500 bg-neutral-100 dark:bg-neutral-700' }" size="lg"
-          :alt="`${user.first_name} ${user.last_name}`" :src="user.avatar" />
+          :alt="`${user.firstname} ${user.lastname}`" :src="user.avatar" />
       </UChip>
     </UButton>
 
@@ -68,7 +68,7 @@ const items = [
 
 
 const logout = async () => {
-  await userStore.logout().then(async () => await navigateTo('/login'))
+  await userStore.logout()
 
 }
 </script>

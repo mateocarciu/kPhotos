@@ -1,30 +1,3 @@
-<script setup lang="ts">
-import { UForm } from '#components'
-
-const userStore = useUserStore()
-const { isLoading } = useUser()
-
-const token = ref('')
-const toast = useToast()
-
-if (userStore.isLoggedIn) {
-    navigateTo('/dashboard')
-}
-
-const handleLogin = async () => {
-    if (!token.value) {
-        toast.add({
-            title: 'Error',
-            description: 'Please enter your API token',
-            color: 'error'
-        })
-        return
-    }
-    await userStore.login(token.value)
-}
-
-</script>
-
 <template>
     <UContainer class="max-w-md mt-20">
         <UCard>
@@ -46,3 +19,24 @@ const handleLogin = async () => {
         </UCard>
     </UContainer>
 </template>
+
+<script setup lang="ts">
+
+const userStore = useUserStore()
+const { isLoading } = useUser()
+
+const token = ref('')
+const toast = useToast()
+
+const handleLogin = async () => {
+    if (!token.value) {
+        toast.add({
+            title: 'Error',
+            description: 'Please enter your API token',
+            color: 'error'
+        })
+        return
+    }
+    await userStore.login(token.value)
+}
+</script>

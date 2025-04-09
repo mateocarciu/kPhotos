@@ -13,11 +13,12 @@ export default defineEventHandler(async (event) => {
     })
 
     if (!res || !res.data) {
+      deleteCookie(event, 'user_token')
       throw createError({ statusCode: 401, message: 'Invalid token' })
     }
 
     return { profile: res.data }
-  } catch (error) {
-    throw createError({ statusCode: 401, message: 'Failed to fetch profile' })
+  } catch (error: any) {
+    throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch profile' })
   }
 })

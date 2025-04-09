@@ -25,8 +25,7 @@ export default defineEventHandler(async (event) => {
     })
 
     return { success: true, profile: res.data }
-  } catch (error) {
-    console.error('Login error:', error)
-    throw createError({ statusCode: 401, message: 'Invalid token' })
+  } catch (error: any) {
+    throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch profile' })
   }
 })
