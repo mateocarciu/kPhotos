@@ -1,41 +1,56 @@
 import { fetchProfile, login, logout } from '~/services/userService'
 import type { UserProfile } from '~/types'
 
-export const useUserStore = defineStore('user', {
-  state: () => ({
-    profile: null as UserProfile | null,
-    isLoading: false
-  }),
-  getters: {
-    isLoggedIn: (state) => !!state.profile
-  },
-  actions: {
-    clearProfile() {
-      this.profile = null
-    },
-    async fetchProfile() {
-      this.isLoading = true
-      const { data } = await fetchProfile()
-      if (data?.profile) this.profile = data.profile
-      this.isLoading = false
-    },
-    async login(token: string) {
-      const toast = useToast()
-      this.isLoading = true
-      const { data, error } = await login(token)
-      if (data?.profile) {
-        this.profile = data.profile
-        toast.add({ title: 'Logged in', color: 'success' })
-        navigateTo('/dashboard')
-      } else {
-        toast.add({ title: 'Login failed', color: 'error' })
-      }
-      this.isLoading = false
-    },
-    async logout() {
-      await logout()
-      this.clearProfile()
-      navigateTo('/login')
+export const useUserStore = defineStore('user', () => {
+  const profile = ref<UserProfile | null>(null)
+  const isLoading = ref(false)
+  const tokenCookie = useCookie('user_token', {
+    default: () => [],
+    watch: true
+  })
+
+  const isLoggedIn = computed(() => !!tokenCookie.value)
+
+  const clearProfile = () => {
+    profile.value = null
+  }
+
+  const fetchProfileAction = async () => {
+    isLoading.value = true
+    const { data } = await fetchProfile()
+    if (data?.profile) profile.value = data.profile
+    isLoading.value = false
+  }
+
+  const loginAction = async (token: string) => {
+    const toast = useToast()
+    isLoading.value = true
+    const { data, error } = await login(token)
+    if (data?.profile) {
+      profile.value = data.profile
+      tokenCookie.value = true
+      toast.add({ title: 'Logged in', color: 'success' })
+      navigateTo('/')
+    } else {
+      toast.add({ title: 'Login failed', color: 'error' })
     }
+    isLoading.value = false
+  }
+
+  const logoutAction = async () => {
+    await logout()
+    tokenCookie.value = false
+    clearProfile()
+    navigateTo('/login')
+  }
+
+  return {
+    profile,
+    isLoading,
+    isLoggedIn,
+    fetchProfile: fetchProfileAction,
+    login: loginAction,
+    logout: logoutAction,
+    clearProfile
   }
 })

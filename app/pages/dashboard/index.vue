@@ -22,11 +22,12 @@
                     </template>
 
                     <div class="text-sm text-gray-500">
-                        <div v-if="file.type === 'file'">
-                            <div>Size: {{ formatFileSize(file.size || 0) }}</div>
-                            <div>Type: {{ file.mime_type }}</div>
+                        <div v-if="file.type === 'dir'">
+                            <div>Created at: {{ formatDate(file.added_at) }}</div>
                         </div>
-                        <div>Last modified: {{ formatDate(file.last_modified_at) }}</div>
+                        <div v-else>
+                            <img :src="file.path" />
+                        </div>
                     </div>
                 </UCard>
             </div>
@@ -40,14 +41,10 @@ import type { DriveFile } from '~/types'
 
 const { files, isLoading, error, fetchFiles } = useDrive()
 
-// onMounted(() => {
-//     fetchFiles()
-// })
 fetchFiles()
 
 const handleFileClick = (file: DriveFile) => {
     if (file.type === 'dir') {
-
         // TODO: Implémenter la navigation dans les dossiers 
     } else {
         // TODO: Implémenter l'ouverture des fichiers / png /jpeg / mp4 etc
