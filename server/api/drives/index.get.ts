@@ -24,23 +24,7 @@ export default defineEventHandler(async (event) => {
       }
     })
 
-    const updatedFiles = filesResponse.data.map((file: any) => {
-      if (file.type === 'file' && ['image', 'video'].includes(file.extension_type)) {
-        return {
-          ...file,
-          path: `https://kdrive.infomaniak.com/2/drive/${driveId}/files/${file.id}/thumbnail?t=${file.last_modified_at}`
-        }
-      }
-      return file
-    })
-
-    return {
-      result: 'success',
-      data: updatedFiles,
-      response_at: filesResponse.response_at,
-      cursor: filesResponse.cursor,
-      has_more: filesResponse.has_more
-    }
+    return filesResponse
   } catch (error: any) {
     throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch drives' })
   }
