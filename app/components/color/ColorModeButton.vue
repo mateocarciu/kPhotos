@@ -1,7 +1,7 @@
 <template>
-    <ClientOnly v-if="!colorMode?.forced">
-        <UButton :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'" color="neutral"
-            variant="ghost" aria-label="Theme" @click="isDark = !isDark" />
+    <ClientOnly>
+        <UButton v-if="!colorMode?.forced" :icon="isDark ? 'i-heroicons-moon-20-solid' : 'i-heroicons-sun-20-solid'"
+            color="neutral" variant="ghost" aria-label="Theme" @click="isDark = !isDark" />
         <template #fallback>
             <div class="size-8" />
         </template>

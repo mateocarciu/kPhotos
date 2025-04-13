@@ -4,12 +4,9 @@ import type { UserProfile } from '~/types'
 export const useUserStore = defineStore('user', () => {
   const profile = ref<UserProfile | null>(null)
   const isLoading = ref(false)
-  const tokenCookie = useCookie('user_token', {
-    default: () => [],
-    watch: true
-  })
+  const tokenCookie = useCookie('user_token').value
 
-  const isLoggedIn = computed(() => !!tokenCookie.value)
+  const isLoggedIn = ref(!!tokenCookie?.length)
 
   const clearProfile = () => {
     profile.value = null
@@ -28,7 +25,7 @@ export const useUserStore = defineStore('user', () => {
     const { data, error } = await login(token)
     if (data?.profile) {
       profile.value = data.profile
-      tokenCookie.value = true
+      isLoggedIn.value = true
       toast.add({ title: 'Logged in', color: 'success' })
       navigateTo('/')
     } else {
@@ -39,7 +36,7 @@ export const useUserStore = defineStore('user', () => {
 
   const logoutAction = async () => {
     await logout()
-    tokenCookie.value = false
+    isLoggedIn.value = false
     clearProfile()
     navigateTo('/login')
   }

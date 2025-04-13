@@ -41,7 +41,9 @@ import type { DriveFile } from '~/types'
 
 const { files, isLoading, error, fetchFiles } = useDrive()
 
-fetchFiles()
+onMounted(async () => {
+    await fetchFiles()
+})
 
 const handleFileClick = (file: DriveFile) => {
     if (file.type === 'dir') {

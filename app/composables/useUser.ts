@@ -5,6 +5,7 @@ export const useUser = () => {
     user: computed(() => userStore.profile),
     isLoggedIn: computed(() => userStore.isLoggedIn),
     isLoading: computed(() => userStore.isLoading),
+    fetchProfile: userStore.fetchProfile,
     login: userStore.login,
     logout: userStore.logout
   }

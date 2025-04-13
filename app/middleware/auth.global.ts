@@ -1,11 +1,18 @@
-export default defineNuxtRouteMiddleware((to, from) => {
+export default defineNuxtRouteMiddleware(async (to) => {
   const userStore = useUserStore()
 
   // Routes autorisées pour les utilisateurs non connectés
   const publicRoutes = ['/', '/login']
 
-  if (!userStore.profile && userStore.isLoggedIn) {
-    userStore.fetchProfile()
+  // console.log('Middleware auth', userStore.isLoggedIn, to.path)
+
+  if (process.client && userStore.isLoggedIn && !userStore.profile) {
+    await userStore.fetchProfile()
+  }
+
+  // Cas 2 : Si l'utilisateur est connecté et essaie d'aller sur /login
+  if (userStore.isLoggedIn && to.path === '/login') {
+    return navigateTo('/dashboard')
   }
 
   // Cas 1 : Si l'utilisateur n'est pas connecté
@@ -13,10 +20,5 @@ export default defineNuxtRouteMiddleware((to, from) => {
     if (!publicRoutes.includes(to.path)) {
       return navigateTo('/login')
     }
-  }
-
-  // Cas 2 : Si l'utilisateur est connecté et essaie d'aller sur /login
-  if (userStore.isLoggedIn && to.path === '/login') {
-    return navigateTo('/dashboard')
   }
 })

@@ -9,8 +9,8 @@ export async function useApiFetch<T>(url: string, options: any = {}) {
 
     return { data, error: null }
   } catch (error: any) {
-    if (error?.statusCode === 401 || userStore.isLoggedIn) {
-      userStore.logout()
+    if (error?.statusCode === 401) {
+      await userStore.logout()
     }
 
     console.error('API Fetch Error:', error)
