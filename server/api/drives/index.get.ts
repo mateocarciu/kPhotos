@@ -6,25 +6,26 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const drivesResponse = await $fetch('https://calendar.infomaniak.com/api/securedProxy/2/drive/users/current/drives', {
+    const productsResponse = await $fetch(`https://api.infomaniak.com/1/products`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
 
-    const driveId = drivesResponse?.data?.[0]?.drive_id
+    const product = productsResponse?.data?.find((p: any) => p.service_name === 'drive')
 
-    if (!driveId) {
-      throw createError({ statusCode: 404, message: 'No drive found' })
+    if (!product) {
+      throw createError({ statusCode: 404, message: 'No Kdrive product found' })
     }
+    const account_id = product?.account_id
 
-    const filesResponse = await $fetch(`https://kdrive.infomaniak.com/3/drive/${driveId}/files/5/files?with=capabilities,supported_by,dropbox,dropbox.capabilities,version,conversion_capabilities,users,teams,is_favorite,sharelink,path,categories,external_import&limit=40&order_by=type,mime_type&order_for[type]=asc&order_for[mime_type]=asc`, {
+    const drivesResponse = await $fetch(`https://api.infomaniak.com/2/drive?account_id=${account_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
 
-    return filesResponse
+    return drivesResponse
   } catch (error: any) {
     throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch drives' })
   }

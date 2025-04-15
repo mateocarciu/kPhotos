@@ -12,7 +12,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // Cas 2 : Si l'utilisateur est connecté et essaie d'aller sur /login
   if (userStore.isLoggedIn && to.path === '/login') {
-    return navigateTo('/dashboard')
+    return navigateTo('/drives')
   }
 
   // Cas 1 : Si l'utilisateur n'est pas connecté

@@ -1,9 +1,9 @@
 export const useDrive = () => {
   const store = useDriveStore()
   return {
-    files: computed(() => store.getFiles),
+    drives: computed(() => store.getDrives),
     isLoading: computed(() => store.isLoading),
     error: computed(() => store.error),
-    fetchFiles: store.fetchFiles
+    fetchDrives: store.fetchDrives
   }
 }

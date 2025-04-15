@@ -146,3 +146,27 @@ export interface DriveStoreState {
   isLoading: boolean
   error: string | null
 }
+
+export interface Drive {
+  id: number
+  name: string
+  size: number
+  used_size: number
+  created_at: number
+  updated_at: number
+  in_maintenance: boolean
+  maintenance_at: number | null
+  maintenance_types: any[]
+  version: string
+  users_count: number
+  users_quota: number
+  product_id: number
+  account_id: number
+  expired_at: number
+  is_locked: boolean
+  description: string
+  is_demo: boolean
+  role: string
+  account_admin: boolean
+  is_in_app_subscription: boolean
+}

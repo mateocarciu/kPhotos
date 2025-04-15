@@ -54,9 +54,9 @@ const items = [
   ],
   [
     {
-      label: 'Dashboard',
-      icon: 'i-heroicons-cog-8-tooth',
-      to: '/dashboard'
+      label: 'Drives',
+      icon: 'i-heroicons-folder',
+      to: '/drives'
     }
   ],
   [
