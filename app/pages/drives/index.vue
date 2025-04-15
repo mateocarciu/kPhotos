@@ -44,7 +44,8 @@
                 </div>
                 <template #footer>
                     <div class="flex justify-end">
-                        <UButton icon="i-heroicons-arrow-right" variant="ghost" @click.stop="handleDriveClick(drive)">
+                        <UButton trailing-icon="i-heroicons-arrow-right" variant="solid"
+                            @click.stop="handleDriveClick(drive.id)">
                             Open
                         </UButton>
                     </div>
@@ -55,15 +56,12 @@
 </template>
 
 <script setup lang="ts">
-import type { Drive } from '~/types'
-
 const { drives, isLoading, error, fetchDrives } = useDrive()
 
 onMounted(fetchDrives)
 
-const handleDriveClick = (drive: Drive) => {
-    console.log('Drive clicked:', drive)
-    // Optionnel : navigateTo(`/drives/${drive.id}`)
+const handleDriveClick = (drive_id: Number) => {
+    navigateTo(`/drives/${drive_id}`)
 }
 
 const formatDriveSize = (bytes: number) => {
