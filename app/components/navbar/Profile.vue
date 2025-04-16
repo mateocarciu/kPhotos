@@ -17,7 +17,7 @@
             Signed in as
           </p>
           <p class="truncate font-medium">
-            {{ user.email }}
+            {{ user.firstname }} {{ user.lastname }}
           </p>
         </div>
       </template>

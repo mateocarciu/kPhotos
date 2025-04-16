@@ -1,4 +1,3 @@
-// stores/drive.ts
 import type { Drive, DriveFile } from '~/types'
 import * as driveService from '~/services/driveService'
 

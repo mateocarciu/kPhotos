@@ -61,7 +61,7 @@ const { drives, isLoading, error, fetchDrives } = useDrive()
 onMounted(fetchDrives)
 
 const handleDriveClick = (drive_id: Number) => {
-    navigateTo(`/drives/${drive_id}`)
+    navigateTo(`/drives/${drive_id}/files/5`)
 }
 
 const formatDriveSize = (bytes: number) => {
