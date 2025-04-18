@@ -27,7 +27,7 @@ export const useUserStore = defineStore('user', () => {
       profile.value = data.profile
       isLoggedIn.value = true
       toast.add({ title: 'Logged in', color: 'success' })
-      navigateTo('/')
+      navigateTo('/drives')
     } else {
       toast.add({ title: 'Login failed', color: 'error' })
     }
