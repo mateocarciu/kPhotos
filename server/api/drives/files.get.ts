@@ -1,4 +1,5 @@
-// import { ApiResponse } from './../../../app/types/index';
+import type { ApiResponse, DriveFile } from '@/types'
+
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'user_token')
   const query = getQuery(event)
@@ -15,14 +16,18 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch(`https://api.infomaniak.com/3/drive/${drive_id}/files/${file_id}/files`, {
+    const response = await $fetch<ApiResponse<{ file: DriveFile }>>(`https://api.infomaniak.com/3/drive/${drive_id}/files/${file_id}/files`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
 
     return response
-  } catch (error: any) {
-    throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch files' })
+  } catch (error: unknown) {
+    if (error instanceof Error && 'response' in error) {
+      const responseError = error as { response: { status: number; statusText: string } }
+      throw createError({ statusCode: responseError.response.status || 500, message: responseError.response.statusText || 'Failed to fetch files' })
+    }
+    throw createError({ statusCode: 500, message: 'An unknown error occurred' })
   }
 })

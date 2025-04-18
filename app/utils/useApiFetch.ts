@@ -1,4 +1,4 @@
-export async function useApiFetch<T>(url: string, options: any = {}) {
+export async function useApiFetch<T>(url: string, options: Record<string, unknown> = {}) {
   const userStore = useUserStore()
 
   try {
@@ -8,8 +8,8 @@ export async function useApiFetch<T>(url: string, options: any = {}) {
     })
 
     return { data, error: null }
-  } catch (error: any) {
-    if (error?.statusCode === 401) {
+  } catch (error: unknown) {
+    if ((error as { statusCode?: number })?.statusCode === 401) {
       await userStore.logout()
     }
 

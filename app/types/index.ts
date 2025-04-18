@@ -26,7 +26,7 @@ export interface UserProfile {
   security_assistant: number
   security_check: boolean
   open_renewal_warranty_invoice_group_id: number[]
-  auth_devices: any[]
+  auth_devices: unknown[]
   validated_at: number | null
   last_login_at: number
   administration_last_login_at: number
@@ -40,16 +40,6 @@ export interface UserProfile {
   unsuccessful_connexion_rate_limit: number
   unsuccessful_connexion_notification: boolean
   successful_connexion_notification: boolean
-}
-
-export interface InfomaniakApiResponse<T> {
-  data: T
-  success: boolean
-  error?: string
-}
-
-export interface UserResponse {
-  profile: UserProfile
 }
 
 export interface DriveFileCapabilities {
@@ -104,14 +94,14 @@ export interface DriveFile {
   updated_at: number
   parent_id: number
   users: number[]
-  teams: any[]
+  teams: unknown[]
   is_favorite: boolean
-  sharelink: any
+  sharelink: unknown
   capabilities: DriveFileCapabilities
-  categories: any[]
+  categories: unknown[]
   color: string | null
-  dropbox: any
-  external_import: any
+  dropbox: unknown
+  external_import: unknown
   size?: number
   mime_type?: string
   extension_type?: string
@@ -135,18 +125,6 @@ export interface ApiResponse<T> {
   error?: string
 }
 
-export interface UserStoreState {
-  profile: UserProfile | null
-  isLoading: boolean
-  error: string | null
-}
-
-export interface DriveStoreState {
-  files: DriveFile[]
-  isLoading: boolean
-  error: string | null
-}
-
 export interface Drive {
   id: number
   name: string
@@ -156,7 +134,7 @@ export interface Drive {
   updated_at: number
   in_maintenance: boolean
   maintenance_at: number | null
-  maintenance_types: any[]
+  maintenance_types: unknown[]
   version: string
   users_count: number
   users_quota: number
@@ -169,4 +147,34 @@ export interface Drive {
   role: string
   account_admin: boolean
   is_in_app_subscription: boolean
+}
+
+export interface ProductRights {
+  technical: boolean
+  statistic?: boolean
+}
+
+export interface Products {
+  id: number
+  account_id: number
+  service_id: number
+  service_name: string
+  customer_name: string
+  internal_name: string | null
+  created_at: number
+  expired_at: number
+  version: number
+  has_maintenance: boolean
+  is_locked: boolean
+  has_operation_in_progress: boolean
+  tags: unknown[]
+  unique_id: number
+  description: string
+  is_free: boolean
+  is_zero_price: boolean
+  is_trial: boolean
+  rights: ProductRights
+  parent_id?: number
+  parent_service_id?: number
+  parent_service_name?: string
 }

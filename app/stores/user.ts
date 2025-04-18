@@ -22,7 +22,7 @@ export const useUserStore = defineStore('user', () => {
   const loginAction = async (token: string) => {
     const toast = useToast()
     isLoading.value = true
-    const { data, error } = await login(token)
+    const { data } = await login(token)
     if (data?.profile) {
       profile.value = data.profile
       isLoggedIn.value = true

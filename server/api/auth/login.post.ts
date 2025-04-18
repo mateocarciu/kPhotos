@@ -1,3 +1,5 @@
+import type { ApiResponse, UserProfile } from '@/types'
+
 export default defineEventHandler(async (event) => {
   const body = await readBody<{ token: string }>(event)
 
@@ -6,7 +8,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const res = await $fetch('https://api.infomaniak.com/profile', {
+    const res = await $fetch<ApiResponse<{ profile: UserProfile }>>('https://api.infomaniak.com/profile', {
       headers: {
         Authorization: `Bearer ${body.token}`
       }
@@ -25,7 +27,11 @@ export default defineEventHandler(async (event) => {
     })
 
     return { success: true, profile: res.data }
-  } catch (error: any) {
-    throw createError({ statusCode: error?.response?.status || 500, message: error?.response?.statusText || 'Failed to fetch profile' })
+  } catch (error: unknown) {
+    if (error instanceof Error && 'response' in error) {
+      const response = (error as { response?: { status?: number; statusText?: string } }).response
+      throw createError({ statusCode: response?.status || 500, message: response?.statusText || 'Failed to fetch profile' })
+    }
+    throw createError({ statusCode: 500, message: 'An unknown error occurred' })
   }
 })

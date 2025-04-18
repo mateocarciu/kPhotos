@@ -6,8 +6,7 @@
         <p class="max-w-sm text-xl text-neutral-400">kPhotos is an Google Photos alternative</p>
         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
           <UButton label="Home" variant="solid" color="primary" :to="isLoggedIn ? '/drives' : '/login'" />
-          <UButton label="Learn more" variant="outline" color="neutral" to="https://github.com/mateocarciu/kPhotos"
-            taget="_blank" />
+          <UButton label="Learn more" variant="outline" color="neutral" to="https://github.com/mateocarciu/kPhotos" taget="_blank" />
         </div>
       </div>
     </div>
@@ -15,5 +14,5 @@
 </template>
 
 <script setup lang="ts">
-const { isLoggedIn } = useUser();
+const { isLoggedIn } = useUser()
 </script>
