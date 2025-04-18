@@ -3,6 +3,10 @@ import type { ApiResponse, DriveFile } from '@/types'
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'user_token')
   const query = getQuery(event)
+  const cursor = query.cursor as string | undefined
+  const order_by = query.order_by ?? ['added_at']
+  const order = query.order ?? 'desc'
+  const limit = query.limit ?? 20
 
   const drive_id = query.drive_id as string
   const file_id = query.file_id as string
@@ -17,8 +21,12 @@ export default defineEventHandler(async (event) => {
 
   try {
     const response = await $fetch<ApiResponse<{ file: DriveFile }>>(`https://api.infomaniak.com/3/drive/${drive_id}/files/${file_id}/files`, {
-      headers: {
-        Authorization: `Bearer ${token}`
+      headers: { Authorization: `Bearer ${token}` },
+      params: {
+        cursor,
+        order_by,
+        order,
+        limit
       }
     })
 

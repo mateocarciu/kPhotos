@@ -38,7 +38,7 @@
         </div>
         <template #footer>
           <div class="flex justify-end">
-            <UButton trailing-icon="i-heroicons-arrow-right" variant="solid" @click.stop="handleDriveClick(drive.id)"> Open </UButton>
+            <UButton trailing-icon="i-heroicons-arrow-right" variant="solid" @click="handleDriveClick(drive.id)"> Open </UButton>
           </div>
         </template>
       </UCard>
@@ -47,6 +47,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDate } from '#imports'
+
 const { drives, isLoading, error, fetchDrives } = useDrive()
 
 onMounted(fetchDrives)
@@ -61,15 +63,5 @@ const formatDriveSize = (bytes: number) => {
   const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
   const i = Math.floor(Math.log(bytes) / Math.log(k))
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
-
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp * 1000).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
 }
 </script>

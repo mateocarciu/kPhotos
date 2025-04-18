@@ -155,6 +155,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDate } from '#imports'
+
 const { user } = useUser()
 const toast = useToast()
 const isEditing = ref(false)
@@ -201,16 +203,5 @@ const cancelEdit = () => {
   form.email = user.value?.email || ''
   form.sms_phone = user.value?.sms_phone || ''
   isEditing.value = false
-}
-
-// Format last login date
-const formatDate = (timestamp: number) => {
-  return new Date(timestamp * 1000).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit'
-  })
 }
 </script>

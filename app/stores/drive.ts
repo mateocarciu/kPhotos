@@ -4,6 +4,8 @@ import * as driveService from '~/services/driveService'
 export const useDriveStore = defineStore('drive', () => {
   const drives = ref<Drive[]>([])
   const files = ref<DriveFile[]>([])
+  const cursor = ref<string | null>(null)
+  const hasMore = ref(true)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
@@ -22,17 +24,27 @@ export const useDriveStore = defineStore('drive', () => {
     }
   }
 
-  const fetchFiles = async (drive_id: string, file_id: string) => {
+  const fetchFiles = async (drive_id: string, file_id: string, isInitial = true) => {
+    if (isLoading.value || (!isInitial && !hasMore.value)) return
+
     isLoading.value = true
     error.value = null
+
     try {
-      const res = await driveService.fetchFiles(drive_id, file_id)
+      const res = await driveService.fetchFiles(drive_id, file_id, {
+        cursor: isInitial ? undefined : (cursor.value ?? undefined),
+        order_by: ['added_at'],
+        order: 'desc',
+        limit: 20
+      })
+
       if (res?.data?.data) {
-        files.value = Array.isArray(res.data.data) ? res.data.data : [res.data.data]
-      } else {
-        error.value = 'File not found'
-        console.error('File not found:', file_id)
+        const fetched = Array.isArray(res.data.data) ? res.data.data : [res.data.data]
+        files.value = isInitial ? fetched : [...files.value, ...fetched]
       }
+
+      cursor.value = res?.data?.cursor ?? null
+      hasMore.value = res?.data?.has_more ?? false
     } catch (err) {
       error.value = 'Failed to fetch file'
       console.error('File fetch error:', err)
@@ -43,6 +55,7 @@ export const useDriveStore = defineStore('drive', () => {
 
   return {
     drives,
+    hasMore,
     files,
     isLoading,
     error,

@@ -5,6 +5,7 @@ export const useDrive = () => {
     files: computed(() => store.files),
     isLoading: computed(() => store.isLoading),
     error: computed(() => store.error),
+    hasMore: computed(() => store.hasMore),
     fetchDrives: store.fetchDrives,
     fetchFiles: store.fetchFiles
   }

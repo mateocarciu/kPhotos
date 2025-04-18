@@ -38,14 +38,14 @@ const items = [
     {
       label: 'Profile',
       icon: 'i-heroicons-user-circle',
-      to: '/account'
+      onSelect: () => navigateTo('/account')
     }
   ],
   [
     {
       label: 'Drives',
       icon: 'i-heroicons-folder',
-      to: '/drives'
+      onSelect: () => navigateTo('/drives')
     }
   ],
   [
