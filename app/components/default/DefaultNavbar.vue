@@ -8,4 +8,9 @@
       </div>
     </UContainer>
   </header>
+  <div class="mt-4">
+    <UContainer>
+      <NavbarBreadCrumb />
+    </UContainer>
+  </div>
 </template>
