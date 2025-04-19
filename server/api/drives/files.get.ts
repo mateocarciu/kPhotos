@@ -22,9 +22,6 @@ export default defineEventHandler(async (event) => {
     const response = await $fetch<ApiResponse<{ data: DriveFile[] }>>(`https://api.infomaniak.com/3/drive/${drive_id}/files/search?with=capabilities,categories,conversion_capabilities,dropbox,dropbox.capabilities,external_import,is_favorite,path,sharelink,sorted_name,supported_by&order_for[last_modified_at]=desc&order_by=last_modified_at&types[]=image&types[]=video`, {
       headers: { Authorization: `Bearer ${token}` },
       params: {
-        // directory_id: file_id, // le dossier actuel
-        // types: ['image', 'video'],
-        // order_by: ['last_modified_at'],
         cursor,
         limit
       }

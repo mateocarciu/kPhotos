@@ -19,5 +19,17 @@ export default defineNuxtConfig({
     compatibilityVersion: 4
   },
 
+  image: {
+    providers: {
+      selfhost: {
+        name: 'thumbnails',
+        provider: '~/providers/thumbnails.ts',
+        options: {
+          baseUrl: ''
+        }
+      }
+    },
+    provider: 'thumbnails'
+  },
   compatibilityDate: '2024-11-27'
 })
