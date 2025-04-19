@@ -24,17 +24,17 @@ export const useDriveStore = defineStore('drive', () => {
     }
   }
 
-  const fetchFiles = async (drive_id: string, file_id: string, isInitial = true) => {
+  const fetchFiles = async (drive_id: string, isInitial = true) => {
     if (isLoading.value || (!isInitial && !hasMore.value)) return
 
     isLoading.value = true
     error.value = null
 
     try {
-      const res = await driveService.fetchFiles(drive_id, file_id, {
+      const res = await driveService.fetchFiles(drive_id, {
         cursor: isInitial ? undefined : (cursor.value ?? undefined),
-        order_by: ['added_at'],
-        order: 'desc',
+        // order_by: ['added_at'],
+        // order: 'desc',
         limit: 20
       })
 

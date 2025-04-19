@@ -9,9 +9,8 @@ export default defineEventHandler(async (event) => {
   const limit = query.limit ?? 20
 
   const drive_id = query.drive_id as string
-  const file_id = query.file_id as string
 
-  if (!drive_id || !file_id) {
+  if (!drive_id) {
     throw createError({ statusCode: 400, message: 'Drive ID and File ID are required' })
   }
 
@@ -20,12 +19,13 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch<ApiResponse<{ file: DriveFile }>>(`https://api.infomaniak.com/3/drive/${drive_id}/files/${file_id}/files`, {
+    const response = await $fetch<ApiResponse<{ data: DriveFile[] }>>(`https://api.infomaniak.com/3/drive/${drive_id}/files/search`, {
       headers: { Authorization: `Bearer ${token}` },
       params: {
+        // directory_id: file_id, // le dossier actuel
+        // types: ['image', 'video'],
+        // order_by: ['last_modified_at'],
         cursor,
-        order_by,
-        order,
         limit
       }
     })

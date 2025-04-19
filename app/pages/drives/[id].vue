@@ -20,7 +20,14 @@
 
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           <template v-for="file in group.files" :key="file.id">
-            <UCard v-if="file.type === 'dir'" class="transition-shadow hover:shadow-lg">
+            <div v-if="file.extension_type === 'image' || file.extension_type === 'video'" class="group relative cursor-pointer overflow-hidden rounded-lg shadow transition hover:shadow-lg" @click="handleItemClick(file)">
+              <img :src="getThumbnailUrl(file.id)" alt="thumbnail" class="h-64 w-full rounded-lg object-cover" />
+              <div class="absolute bottom-0 w-full truncate bg-black/50 p-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
+                {{ file.name }}
+              </div>
+            </div>
+
+            <UCard v-else class="transition-shadow hover:shadow-lg">
               <template #header>
                 <div class="flex items-center gap-2">
                   <UIcon name="i-heroicons-folder" class="h-5 w-5 text-yellow-500" />
@@ -34,24 +41,6 @@
                   <UButton trailing-icon="i-heroicons-arrow-right" variant="solid" @click="handleItemClick(file)"> Open </UButton>
                 </div>
               </template>
-            </UCard>
-
-            <div v-else-if="file.extension_type === 'image' || file.extension_type === 'video'" class="group relative cursor-pointer overflow-hidden rounded-lg shadow transition hover:shadow-lg" @click="handleItemClick(file)">
-              <img :src="getThumbnailUrl(file.id)" alt="thumbnail" class="h-64 w-full rounded-lg object-cover" />
-              <div class="absolute bottom-0 w-full truncate bg-black/50 p-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-                {{ file.name }}
-              </div>
-            </div>
-
-            <UCard v-else class="cursor-pointer transition-shadow hover:shadow-lg" @click="handleItemClick(file)">
-              <template #header>
-                <div class="flex items-center gap-2">
-                  <UIcon name="i-heroicons-document" class="h-5 w-5 text-blue-500" />
-                  <span class="truncate font-medium">{{ file.name }}</span>
-                </div>
-              </template>
-              <div class="mt-2 text-sm text-gray-500 dark:text-gray-400">Type : {{ file.mime_type }}</div>
-              <div class="mt-2 text-xs text-gray-400">Modifié : {{ formatDate(file.last_modified_at) }}</div>
             </UCard>
           </template>
         </div>
@@ -75,7 +64,6 @@ const route = useRoute()
 const router = useRouter()
 
 const drive_id = route.params.id as string
-const file_id = route.params.file_id as string
 const infiniteScrollTrigger = ref<HTMLElement | null>(null)
 const observer = ref<IntersectionObserver | null>(null)
 
@@ -106,7 +94,7 @@ const groupedFiles = computed(() => {
 const onIntersect = (entries: IntersectionObserverEntry[]) => {
   const [entry] = entries
   if (entry && entry.isIntersecting && hasMore.value && !isLoading.value) {
-    fetchFiles(drive_id, file_id, false)
+    fetchFiles(drive_id, false)
   }
 }
 
@@ -131,7 +119,7 @@ const updateFloatingDate = () => {
 }
 
 onMounted(() => {
-  fetchFiles(drive_id, file_id)
+  fetchFiles(drive_id)
 
   observer.value = new IntersectionObserver(onIntersect, {
     root: null,
