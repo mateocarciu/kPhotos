@@ -38,7 +38,7 @@
               <div class="mt-2 text-xs text-gray-400">Modifié : {{ formatDate(file.last_modified_at) }}</div>
               <template #footer>
                 <div class="flex justify-end">
-                  <UButton trailing-icon="i-heroicons-arrow-right" variant="solid" @click="handleItemClick(file)"> Open </UButton>
+                  <UButton trailing-icon="i-heroicons-arrow-right" variant="solid"> Open </UButton>
                 </div>
               </template>
             </UCard>
@@ -141,12 +141,6 @@ onUnmounted(() => {
 
   window.removeEventListener('scroll', updateFloatingDate)
 })
-
-const handleItemClick = (file: DriveFile) => {
-  if (file.type === 'dir') {
-    router.push(`/drives/${drive_id}/files/${file.id}`)
-  }
-}
 
 // fetch thumbnail
 const getThumbnailUrl = (file_id: number) => {
