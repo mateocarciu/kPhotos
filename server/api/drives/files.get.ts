@@ -4,8 +4,8 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'user_token')
   const query = getQuery(event)
   const cursor = query.cursor as string | undefined
-  const order_by = query.order_by ?? ['added_at']
-  const order = query.order ?? 'desc'
+  // const order_by = query.order_by ?? ['added_at']
+  // const order = query.order ?? 'desc'
   const limit = query.limit ?? 20
 
   const drive_id = query.drive_id as string

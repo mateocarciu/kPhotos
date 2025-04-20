@@ -14,18 +14,18 @@
 
     <div v-else>
       <div v-for="(group, index) in groupedFiles" :key="index" class="mb-10">
-        <div :ref="(el) => sectionRefs.set(group.label, el)" class="mb-4 text-xl font-semibold text-gray-700 dark:text-white">
+        <div :ref="(el) => sectionRefs.set(group.label, el as HTMLElement)" class="mb-4 text-xl font-semibold text-gray-700 dark:text-white">
           {{ group.label }}
         </div>
 
         <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
           <div v-for="file in group.files" :key="file.id" class="relative overflow-hidden rounded-lg shadow">
-            <div class="group relative h-64 w-full cursor-pointer">
-              <div v-if="!loadedImages[file.id]" class="absolute inset-0 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
+            <div class="group relative cursor-pointer">
+              <div v-if="!loadedImages[file.id]" class="absolute inset-0 z-10 flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                 <UIcon name="i-heroicons-arrow-path" class="h-6 w-6 animate-spin text-gray-400" />
               </div>
 
-              <NuxtImg :src="`/api/drives/thumbnail?drive_id=${drive_id}&file_id=${file.id}`" :alt="file.name" class="h-64 w-full object-cover transition-opacity duration-300" :class="{ 'opacity-0': !loadedImages[file.id], 'opacity-100': loadedImages[file.id] }" @load="onImageLoad(file.id)" />
+              <NuxtImg :src="`/api/drives/thumbnail?drive_id=${drive_id}&file_id=${file.id}&width=400&height=400`" :alt="file.name" class="h-64 w-full object-contain transition-opacity duration-300" :class="{ 'opacity-0': !loadedImages[file.id], 'opacity-100': loadedImages[file.id] }" @load="onImageLoad(file.id)" />
 
               <div class="absolute bottom-0 w-full truncate bg-black/50 p-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
                 {{ file.name }}
