@@ -3,15 +3,13 @@ import type { ApiResponse, DriveFile } from '@/types'
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'user_token')
   const query = getQuery(event)
-  const cursor = query.cursor as string | undefined
-  // const order_by = query.order_by ?? ['added_at']
-  // const order = query.order ?? 'desc'
-  const limit = query.limit ?? 20
 
   const drive_id = query.drive_id as string
+  const cursor = query.cursor as string | undefined
+  const limit = Number(query.limit ?? 20)
 
   if (!drive_id) {
-    throw createError({ statusCode: 400, message: 'Drive ID and File ID are required' })
+    throw createError({ statusCode: 400, message: 'Drive ID is required' })
   }
 
   if (!token) {
@@ -19,12 +17,26 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch<ApiResponse<{ data: DriveFile[] }>>(`https://api.infomaniak.com/3/drive/${drive_id}/files/search?with=capabilities,categories,conversion_capabilities,dropbox,dropbox.capabilities,external_import,is_favorite,path,sharelink,sorted_name,supported_by&order_for[last_modified_at]=desc&order_by=last_modified_at&types[]=image&types[]=video`, {
-      headers: { Authorization: `Bearer ${token}` },
-      params: {
-        cursor,
-        limit
-      }
+    const typesRaw = query.types
+    const types = typeof typesRaw === 'string' ? [typesRaw] : Array.isArray(typesRaw) ? typesRaw : ['image', 'video']
+
+    const order_by = query.order_by ?? 'last_modified_at'
+    const order_for = `order_for[${order_by}]`
+
+    const params = new URLSearchParams()
+    if (cursor) params.append('cursor', cursor)
+    params.append('limit', limit.toString())
+    params.append('order_by', String(order_by))
+    params.append(order_for, 'desc')
+
+    types.forEach((t) => params.append('types[]', t))
+
+    params.append('with', 'capabilities,categories,conversion_capabilities,dropbox,dropbox.capabilities,external_import,is_favorite,path,sharelink,sorted_name,supported_by')
+
+    const url = `https://api.infomaniak.com/3/drive/${drive_id}/files/search?${params.toString()}`
+
+    const response = await $fetch<ApiResponse<{ data: DriveFile[] }>>(url, {
+      headers: { Authorization: `Bearer ${token}` }
     })
 
     return response

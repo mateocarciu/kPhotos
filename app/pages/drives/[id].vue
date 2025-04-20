@@ -35,6 +35,7 @@
         </div>
       </div>
     </div>
+    <CommonFilesFilters />
 
     <div ref="infiniteScrollTrigger" class="h-10" />
     <div v-if="isLoading && files.length > 0" class="flex justify-center py-4">

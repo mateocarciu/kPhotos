@@ -24,18 +24,21 @@ export const useDriveStore = defineStore('drive', () => {
     }
   }
 
-  const fetchFiles = async (drive_id: string, isInitial = true) => {
+  const fetchFiles = async (drive_id: string, isInitial = true, filtersOverride?: any) => {
     if (isLoading.value || (!isInitial && !hasMore.value)) return
 
     isLoading.value = true
     error.value = null
 
+    const query = filtersOverride || useRoute().query
+
     try {
       const res = await driveService.fetchFiles(drive_id, {
         cursor: isInitial ? undefined : (cursor.value ?? undefined),
-        // order_by: ['added_at'],
-        // order: 'desc',
-        limit: 20
+        limit: 5,
+        order_by: query.order_by,
+        modified_at: query.modified_at,
+        types: query.types
       })
 
       if (res?.data?.data) {

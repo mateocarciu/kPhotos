@@ -12,4 +12,4 @@ export const logout = () =>
     method: 'POST'
   })
 
-export const fetchProfile = () => useApiFetch<{ profile: UserProfile }>('/api/profile')
+export const fetchProfile = () => useApiFetch<{ profile: UserProfile }>('/api/account/profile')
