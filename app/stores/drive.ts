@@ -35,7 +35,7 @@ export const useDriveStore = defineStore('drive', () => {
     try {
       const res = await driveService.fetchFiles(drive_id, {
         cursor: isInitial ? undefined : (cursor.value ?? undefined),
-        limit: 5,
+        limit: 20,
         order_by: query.order_by,
         modified_at: query.modified_at,
         types: query.types
