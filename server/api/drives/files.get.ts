@@ -21,17 +21,18 @@ export default defineEventHandler(async (event) => {
     const types = typeof typesRaw === 'string' ? [typesRaw] : Array.isArray(typesRaw) ? typesRaw : ['image', 'video']
 
     const order_by = query.order_by ?? 'last_modified_at'
-    const order_for = `order_for[${order_by}]`
 
     const params = new URLSearchParams()
     if (cursor) params.append('cursor', cursor)
     params.append('limit', limit.toString())
-    params.append('order_by', String(order_by))
-    params.append(order_for, 'desc')
+    params.append('order_by[]', String(order_by))
+    params.append(`order_for[${order_by}]`, 'desc')
+
+    if (query.modified_at) {
+      params.append('modified_at', String(query.modified_at))
+    }
 
     types.forEach((t) => params.append('types[]', t))
-
-    params.append('with', 'capabilities,categories,conversion_capabilities,dropbox,dropbox.capabilities,external_import,is_favorite,path,sharelink,sorted_name,supported_by')
 
     const url = `https://api.infomaniak.com/3/drive/${drive_id}/files/search?${params.toString()}`
 

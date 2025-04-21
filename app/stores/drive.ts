@@ -27,6 +27,12 @@ export const useDriveStore = defineStore('drive', () => {
   const fetchFiles = async (drive_id: string, isInitial = true, filtersOverride?: any) => {
     if (isLoading.value || (!isInitial && !hasMore.value)) return
 
+    if (isInitial) {
+      files.value = []
+      cursor.value = null
+      hasMore.value = true
+    }
+
     isLoading.value = true
     error.value = null
 
@@ -43,7 +49,9 @@ export const useDriveStore = defineStore('drive', () => {
 
       if (res?.data?.data) {
         const fetched = Array.isArray(res.data.data) ? res.data.data : [res.data.data]
-        files.value = isInitial ? fetched : [...files.value, ...fetched]
+        const existingIds = new Set(files.value.map((f) => f.id))
+        const newFiles = fetched.filter((f) => !existingIds.has(f.id))
+        files.value = isInitial ? fetched : [...files.value, ...newFiles]
       }
 
       cursor.value = res?.data?.cursor ?? null
