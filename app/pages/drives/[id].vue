@@ -16,7 +16,7 @@
           {{ group.label }}
         </div>
 
-        <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+        <div class="flex flex-wrap gap-6">
           <div v-for="file in group.files" :key="file.id" class="relative overflow-hidden rounded-lg">
             <DrivePhotoCard :file="file" :drive-id="drive_id" :loaded="loadedImages.has(file.id)" @loaded="onImageLoad(file.id)" />
           </div>
