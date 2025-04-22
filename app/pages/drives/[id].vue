@@ -2,8 +2,6 @@
   <div class="my-10">
     <h1 class="mb-6 text-3xl font-bold text-gray-800 dark:text-white">Your drive photos</h1>
 
-    <UBadge v-if="floatingDate" class="fixed top-4 left-1/2 z-10 -translate-x-1/2 rounded-xl bg-white/80 px-4 py-2 text-sm font-medium text-gray-800 shadow backdrop-blur dark:bg-gray-900/80 dark:text-white" :label="floatingDate" />
-
     <div v-if="isLoading && files.length === 0" class="flex justify-center py-10">
       <UIcon name="i-heroicons-arrow-path" class="text-primary h-8 w-8 animate-spin" />
     </div>
@@ -12,9 +10,9 @@
       {{ error }}
     </div>
 
-    <div v-else>
-      <div v-for="(group, index) in groupedFiles" :key="index" class="mb-10">
-        <div :ref="(el) => sectionRefs.set(group.label, el as HTMLElement)" class="mb-4 text-xl font-semibold text-gray-700 dark:text-white">
+    <div v-else class="relative">
+      <div v-for="(group, index) in groupedFiles" :key="index" :ref="(el) => sectionRefs.set(group.label, el as HTMLElement)" class="mb-10">
+        <div class="sticky top-0 z-10 mb-4 bg-white/80 px-4 py-2 text-xl font-semibold text-gray-700 backdrop-blur dark:bg-gray-900/80 dark:text-white">
           {{ group.label }}
         </div>
 
@@ -44,14 +42,13 @@ useHead({ title: 'Your drive photos' })
 const { files, isLoading, error, fetchFiles, hasMore } = useDrive()
 const route = useRoute()
 const drive_id = route.params.id as string
+const sectionRefs = ref(new Map<string, HTMLElement>())
+const infiniteScrollTrigger = ref<HTMLElement | null>(null)
 
 const loadedImages = ref<Set<number>>(new Set())
 function onImageLoad(fileId: number) {
   loadedImages.value.add(fileId)
 }
-
-const sectionRefs = ref(new Map<string, HTMLElement>())
-const floatingDate = ref('')
 
 const groupedFiles = computed(() => {
   const groups: Record<string, DriveFile[]> = {}
@@ -68,12 +65,9 @@ const groupedFiles = computed(() => {
   return Object.entries(groups).map(([label, files]) => ({ label, files }))
 })
 
-const infiniteScrollTrigger = ref<HTMLElement | null>(null)
-
 const onIntersect = () => {
   if (hasMore.value && !isLoading.value) {
     fetchFiles(drive_id, false)
-    sectionRefs.value.clear()
   }
 }
 
@@ -95,32 +89,5 @@ onMounted(async () => {
       }
     )
   }
-
-  window.addEventListener('scroll', updateFloatingDate, { passive: true })
-  updateFloatingDate()
 })
-
-onUnmounted(() => {
-  window.removeEventListener('scroll', updateFloatingDate)
-  sectionRefs.value.clear()
-})
-
-function updateFloatingDate() {
-  const sections = Array.from(sectionRefs.value.entries())
-  let found = false
-
-  for (const [label, el] of sections) {
-    if (!el) continue
-    const rect = el.getBoundingClientRect()
-    if (rect.top < 100 && rect.bottom > 100) {
-      floatingDate.value = label
-      found = true
-      break
-    }
-  }
-
-  if (!found && window.scrollY <= 10) {
-    floatingDate.value = ''
-  }
-}
 </script>
