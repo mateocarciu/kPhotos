@@ -21,12 +21,13 @@ export default defineEventHandler(async (event) => {
     const types = typeof typesRaw === 'string' ? [typesRaw] : Array.isArray(typesRaw) ? typesRaw : ['image', 'video']
 
     const order_by = query.order_by ?? 'last_modified_at'
+    const order_dir = query.order_dir ?? 'desc'
 
     const params = new URLSearchParams()
     if (cursor) params.append('cursor', cursor)
     params.append('limit', limit.toString())
     params.append('order_by[]', String(order_by))
-    params.append(`order_for[${order_by}]`, 'desc')
+    params.append(`order_for[${order_by}]`, String(order_dir))
 
     if (query.modified_at) {
       params.append('modified_at', String(query.modified_at))
