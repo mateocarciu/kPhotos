@@ -18,7 +18,7 @@
 
         <div class="flex flex-wrap gap-1">
           <div v-for="file in group.files" :key="file.id" class="relative overflow-hidden rounded-lg">
-            <DrivePhotoCard :file="file" :drive-id="drive_id" :loaded="loadedImages.has(file.id)" @loaded="onImageLoad(file.id)" />
+            <DrivePhotoCard :file="file" :drive-id="drive_id" :loaded="loadedImages.has(file.id)" @loaded="onImageLoad(file.id)" @click="openDetail(file)" />
           </div>
         </div>
       </div>
@@ -34,6 +34,7 @@
 <script setup lang="ts">
 import type { DriveFile } from '@/types'
 import { useIntersectionObserver } from '@vueuse/core'
+import { ModalsUIFilesDetail } from '#components'
 
 useHead({ title: 'Your drive photos' })
 
@@ -62,6 +63,12 @@ const groupedFiles = computed(() => {
   }
   return Object.entries(groups).map(([label, files]) => ({ label, files }))
 })
+
+function openDetail(file: DriveFile) {
+  const overlay = useOverlay()
+  const modal = overlay.create(ModalsUIFilesDetail, { props: { file: file } })
+  modal.open()
+}
 
 const onIntersect = () => {
   if (hasMore.value && !isLoading.value) {

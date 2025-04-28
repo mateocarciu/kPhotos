@@ -102,9 +102,9 @@ export interface DriveFile {
   color: string | null
   dropbox: unknown
   external_import: unknown
-  size?: number
+  size: number
   mime_type?: string
-  extension_type?: string
+  extension_type: string
   scan_status?: string
   supported_by?: string[]
   version?: DriveFileVersion

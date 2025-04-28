@@ -19,6 +19,7 @@
     "@nuxt/image": "1.10.0",
     "@nuxt/test-utils": "3.17.2",
     "@nuxt/ui": "^3.0.2",
+    "@nuxthub/core": "0.8.25",
     "@pinia/nuxt": "^0.10.1",
     "nuxt": "^3.16.2",
     "pinia": "^3.0.1"
