@@ -7,8 +7,8 @@
 
       <NuxtImg :src="`/api/drives/files/thumbnail?drive_id=${driveId}&file_id=${file.id}&width=400&height=400`" :alt="file.name" class="h-64 w-full object-contain transition-opacity duration-300" :class="{ 'opacity-0': !loaded, 'opacity-100': loaded }" @load="$emit('loaded', file.id)" />
 
-      <div class="absolute bottom-0 w-full truncate bg-black/50 p-2 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100">
-        {{ file.name }}
+      <div v-if="file.extension_type === 'video'" class="absolute top-2 right-2 z-20 p-1">
+        <UIcon name="i-heroicons-play-circle" class="h-6 w-6 text-white" />
       </div>
     </div>
   </div>
