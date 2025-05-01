@@ -5,12 +5,12 @@
         <div class="relative w-full rounded-xl">
           <NuxtImg v-if="imageUrl" :src="imageUrl" :alt="file.name" class="max-h-[calc(80vh-150px)] w-full object-contain opacity-0 transition-opacity duration-500" @load="onImageLoad" />
 
-          <div v-if="loading" class="absolute inset-0 flex animate-pulse items-center justify-center">
-            <div class="border-t-primary-500 h-16 w-16 animate-spin rounded-full border-4 border-gray-300" />
+          <div v-if="loading" class="inset-0 flex animate-pulse items-center justify-center">
+            <div class="h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-(--ui-primary)" />
           </div>
         </div>
 
-        <UButton size="sm" :icon="showDetails ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="mt-4" @click="showDetails = !showDetails">
+        <UButton size="sm" :icon="showDetails ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" @click="showDetails = !showDetails">
           {{ showDetails ? 'Hide details' : 'Show details' }}
         </UButton>
 
@@ -47,6 +47,7 @@
 
 <script setup lang="ts">
 import type { DriveFile } from '@/types'
+import { formatDate } from '#imports'
 
 const emit = defineEmits<{ close: [boolean] }>()
 const props = defineProps<{ file: DriveFile }>()
@@ -76,12 +77,5 @@ function onImageLoad(e: Event) {
   loading.value = false
   const img = e.target as HTMLImageElement
   img.style.opacity = '1'
-}
-
-function formatDate(timestamp: number) {
-  return new Date(timestamp * 1000).toLocaleString('fr-FR', {
-    dateStyle: 'medium',
-    timeStyle: 'short'
-  })
 }
 </script>
