@@ -5,7 +5,7 @@
         <div class="relative w-full rounded-xl">
           <NuxtImg v-if="imageUrl" :src="imageUrl" :alt="file.name" class="max-h-[calc(80vh-150px)] w-full object-contain opacity-0 transition-opacity duration-500" @load="onImageLoad" />
 
-          <div v-if="loading" class="inset-0 flex animate-pulse items-center justify-center">
+          <div v-if="loading" class="inset-0 flex items-center justify-center">
             <div class="h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-(--ui-primary)" />
           </div>
         </div>
