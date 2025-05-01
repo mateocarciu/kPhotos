@@ -5,7 +5,7 @@
         <UIcon name="i-heroicons-arrow-path" class="h-6 w-6 animate-spin text-gray-400" />
       </div>
 
-      <NuxtImg :src="`/api/drives/files/thumbnail?drive_id=${driveId}&file_id=${file.id}&width=400&height=400`" :alt="file.name" class="h-64 w-full transition-opacity duration-300" :class="{ 'opacity-0': !loaded, 'opacity-100': loaded }" @load="$emit('loaded', file.id)" />
+      <NuxtImg :src="`/api/drives/files/thumbnail?drive_id=${driveId}&file_id=${file.id}&width=400&height=400`" :alt="file.name" class="h-60 max-w-full transition-opacity duration-300" :class="{ 'opacity-0': !loaded, 'opacity-100': loaded }" @load="$emit('loaded', file.id)" />
 
       <div v-if="file.extension_type === 'video'" class="absolute top-2 right-2 p-1">
         <UIcon name="i-heroicons-play-circle" class="h-6 w-6 text-white" />
