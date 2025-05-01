@@ -3,10 +3,6 @@
     <template #body>
       <div class="flex flex-col items-center gap-6 bg-transparent p-4">
         <div class="relative flex w-full items-center justify-center rounded-xl">
-          <UButton class="absolute left-2 z-11" color="neutral" variant="solid" icon="i-heroicons-chevron-left" />
-
-          <UButton class="absolute right-2 z-11" color="neutral" variant="solid" icon="i-heroicons-chevron-right" />
-
           <NuxtImg v-if="imageUrl" ref="imageRef" :src="imageUrl" :alt="file.name" class="max-h-[calc(80vh-150px)] rounded-xl opacity-0 transition-opacity duration-500" @load="onImageLoad" />
 
           <div v-if="loading" class="absolute inset-0 flex items-center justify-center">
@@ -14,9 +10,15 @@
           </div>
         </div>
 
-        <UButton size="sm" :icon="showDetails ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="mt-4" @click="showDetails = !showDetails">
-          {{ showDetails ? 'Hide details' : 'Show details' }}
-        </UButton>
+        <div class="relative flex w-full items-center justify-between">
+          <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-left" class="mt-4" />
+
+          <UButton :icon="showDetails ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" class="mt-4" @click="showDetails = !showDetails">
+            {{ showDetails ? 'Hide details' : 'Show details' }}
+          </UButton>
+
+          <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="mt-4" />
+        </div>
 
         <div v-if="showDetails" class="grid w-full grid-cols-1 gap-4 text-sm text-gray-800 dark:text-gray-200">
           <div class="flex flex-col">
