@@ -12,7 +12,7 @@
 
     <div v-else class="relative">
       <div v-for="(group, index) in groupedFiles" :key="index" :ref="(el) => sectionRefs.set(group.label, el as HTMLElement)" class="mb-10">
-        <div class="sticky top-0 z-10 mb-4 bg-white/80 px-4 py-2 text-xl font-semibold text-gray-700 backdrop-blur dark:bg-gray-900/80 dark:text-white">
+        <div class="sticky top-0 z-10 mb-4 bg-white/80 py-2 text-xl font-semibold text-gray-700 backdrop-blur dark:bg-gray-900/80 dark:text-white">
           {{ group.label }}
         </div>
 
