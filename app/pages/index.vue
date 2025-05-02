@@ -2,10 +2,10 @@
   <div>
     <div class="my-24 grid max-w-7xl gap-16 sm:grid-cols-2 sm:gap-y-24 lg:items-center">
       <div>
-        <h1 class="mb-5 max-w-sm text-5xl font-bold lg:text-6xl lg:tracking-tight">Welcome to kPhotos</h1>
-        <p class="max-w-sm text-xl text-neutral-400">kPhotos is an Google Photos alternative</p>
+        <h1 class="mb-5 text-5xl lg:text-6xl lg:tracking-tight">Welcome to <span class="font-bold">kPhotos</span></h1>
+        <p class="text-xl text-neutral-400">kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. This application allows you to manage your files, photos, and videos intuitively and securely by accessing the Infomaniak API.</p>
         <div class="mt-6 flex flex-col gap-3 sm:flex-row">
-          <UButton label="Home" variant="solid" color="primary" :to="isLoggedIn ? '/drives' : '/login'" />
+          <UButton :label="isLoggedIn ? 'Home' : 'Log in'" variant="solid" color="primary" :to="isLoggedIn ? '/drives' : '/login'" />
           <UButton label="Learn more" variant="outline" color="neutral" to="https://github.com/mateocarciu/kPhotos" taget="_blank" />
         </div>
       </div>

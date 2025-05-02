@@ -3,15 +3,15 @@
     <UCard>
       <template #header>
         <div class="flex justify-center">
-          <h1 class="text-2xl font-bold">Sign in</h1>
+          <h1 class="text-2xl font-bold">Log in</h1>
         </div>
       </template>
 
       <UForm name="login" class="space-y-4" :state="{ valid: true }" @submit="handleLogin">
         <UFormField help="Enter your Infomaniak API token" class="w-full">
-          <UInput v-model="token" placeholder="Your API token" type="password" icon="i-heroicons-key" autocomplete="off" class="w-full" />
+          <UInput v-model="token" placeholder="Your Infomaniak API token" type="password" icon="i-heroicons-key" autocomplete="off" class="w-full" />
         </UFormField>
-        <UButton color="primary" type="submit" block :loading="isLoading" :disabled="!token"> Sign in </UButton>
+        <UButton color="primary" type="submit" block :loading="isLoading" :disabled="!token"> Log in </UButton>
       </UForm>
     </UCard>
   </UContainer>
