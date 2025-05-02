@@ -1,7 +1,7 @@
 <template>
   <UModal v-model:open="isOpen" :ui="{ content: 'sm:max-w-7xl' }" :title="file?.name" :description="`File ${file?.extension_type?.toUpperCase()}`" @close="emit('close', false)">
     <template #body>
-      <div class="flex flex-col items-center gap-6 bg-transparent p-4">
+      <div class="flex flex-col items-center gap-6 bg-transparent">
         <div class="relative flex w-full items-center justify-center rounded-xl" style="min-height: 60vh">
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-left" class="absolute top-1/2 left-2 z-10 -translate-y-1/2" :disabled="!hasPrevious" @click="navigateToPrevious" />
 
