@@ -18,7 +18,7 @@
 
         <div class="flex flex-wrap gap-1">
           <div v-for="file in group.files" :key="file.id" class="relative overflow-hidden rounded-lg">
-            <DrivePhotoCard :file="file" :drive-id="drive_id" :loaded="loadedImages.has(file.id)" @loaded="onImageLoad(file.id)" @click="openDetail(file)" />
+            <DrivePhotoCard :file="file" :drive-id="drive_id" :loaded="loadedImages.has(file.id)" @loaded="onImageLoad(file.id)" @click="openDetail(file.id)" />
           </div>
         </div>
       </div>
@@ -64,9 +64,9 @@ const groupedFiles = computed(() => {
   return Object.entries(groups).map(([label, files]) => ({ label, files }))
 })
 
-function openDetail(file: DriveFile) {
+function openDetail(fileId: number) {
   const overlay = useOverlay()
-  const modal = overlay.create(ModalsUIFilesDetail, { props: { file: file } })
+  const modal = overlay.create(ModalsUIFilesDetail, { props: { fileId: fileId } })
   modal.open()
 }
 
