@@ -7,7 +7,7 @@
 
           <NuxtImg v-if="fileUrl && file?.extension_type === 'image'" ref="imageRef" :src="fileUrl" :alt="file?.name" class="max-h-[calc(80vh-150px)] rounded-xl opacity-0 transition-opacity duration-500" @load="onImageLoad" />
 
-          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls class="max-h-[calc(80vh-150px)] rounded-xl" />
+          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls controlsList="nodownload" class="max-h-[calc(80vh-150px)] rounded-xl" :style="file?.mime_type === 'video/quicktime' ? { transform: 'rotate(0.01deg)' } : {}" />
 
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="absolute top-1/2 right-2 z-10 -translate-y-1/2" :disabled="!hasNext && !hasMore" @click="navigateToNext" />
 
