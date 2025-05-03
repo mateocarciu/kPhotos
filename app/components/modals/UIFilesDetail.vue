@@ -1,15 +1,17 @@
 <template>
-  <UModal v-model:open="isOpen" :ui="{ content: 'sm:max-w-7xl' }" :title="file?.name" :description="`File ${file?.extension_type?.toUpperCase()}`" @close="emit('close', false)">
+  <UModal v-model:open="isOpen" :ui="{ content: 'sm:max-w-7xl' }" :title="file?.name" :description="`${file?.extension_type?.toUpperCase()}`" @close="emit('close', false)">
     <template #body>
       <div class="flex flex-col items-center gap-6 bg-transparent">
         <div class="relative flex w-full items-center justify-center rounded-xl" style="min-height: 60vh">
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-left" class="absolute top-1/2 left-2 z-10 -translate-y-1/2" :disabled="!hasPrevious" @click="navigateToPrevious" />
 
-          <NuxtImg v-if="imageUrl" ref="imageRef" :src="imageUrl" :alt="file?.name" class="max-h-[calc(80vh-150px)] rounded-xl opacity-0 transition-opacity duration-500" @load="onImageLoad" />
+          <NuxtImg v-if="fileUrl && file?.extension_type === 'image'" ref="imageRef" :src="fileUrl" :alt="file?.name" class="max-h-[calc(80vh-150px)] rounded-xl opacity-0 transition-opacity duration-500" @load="onImageLoad" />
+
+          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls class="max-h-[calc(80vh-150px)] rounded-xl" />
 
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="absolute top-1/2 right-2 z-10 -translate-y-1/2" :disabled="!hasNext && !hasMore" @click="navigateToNext" />
 
-          <div v-if="loading" class="absolute inset-0 flex items-center justify-center">
+          <div v-if="loading && file?.extension_type === 'image'" class="absolute inset-0 flex items-center justify-center">
             <div class="h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-(--ui-primary)" />
           </div>
         </div>
@@ -90,7 +92,7 @@ const hasNext = computed(() => currentIndex.value < files.value.length - 1)
 
 const isOpen = ref(false)
 const loading = ref(true)
-const imageUrl = ref('')
+const fileUrl = ref('')
 const showDetails = ref(false)
 const imageRef = ref<HTMLImageElement | null>(null)
 
@@ -98,7 +100,7 @@ watchEffect(() => {
   if (file.value) {
     isOpen.value = true
     loading.value = true
-    imageUrl.value = getImageUrl(file.value)
+    fileUrl.value = file.value.extension_type === 'image' ? getImageUrl(file.value) : getDownloadUrl(file.value)
     showDetails.value = false
   }
 })
@@ -109,6 +111,15 @@ function getImageUrl(file: DriveFile) {
     file_id: file.id.toString()
   })
   return `/api/drives/files/preview?${params.toString()}`
+}
+
+function getDownloadUrl(file: DriveFile) {
+  if (!file) return ''
+  const params = new URLSearchParams({
+    drive_id: file.drive_id.toString(),
+    file_id: file.id.toString()
+  })
+  return `/api/drives/files/download?${params.toString()}`
 }
 
 function onImageLoad(e: Event) {
