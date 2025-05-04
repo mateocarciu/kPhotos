@@ -16,36 +16,46 @@
           </div>
         </div>
 
-        <div class="w-full text-center">
+        <div class="flex gap-4">
           <UButton :icon="showDetails ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" @click="showDetails = !showDetails">
             {{ showDetails ? 'Hide details' : 'Show details' }}
           </UButton>
+          <UButton icon="i-heroicons-arrow-down-tray" color="primary" variant="solid" :disabled="!file" @click="downloadFile"> Download </UButton>
         </div>
 
-        <div v-if="showDetails" class="grid w-full grid-cols-1 gap-4 text-sm text-gray-800 dark:text-gray-200">
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Name</span>
-            <span class="font-medium">{{ file?.name }}</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Size</span>
-            <span class="font-medium">{{ file?.size ? (file.size / (1024 * 1024)).toFixed(2) : '0.00' }} MB</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-500 dark:text-gray-400">MIME Type</span>
-            <span class="font-medium">{{ file?.mime_type }}</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Modified on</span>
-            <span class="font-medium">{{ formatDate(file?.last_modified_at ?? 0) }}</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Added on</span>
-            <span class="font-medium">{{ formatDate(file?.added_at ?? 0) }}</span>
-          </div>
-          <div class="flex flex-col">
-            <span class="text-xs text-gray-500 dark:text-gray-400">Extension</span>
-            <span class="font-medium">{{ file?.extension_type.toUpperCase() }}</span>
+        <div v-if="showDetails" class="w-full rounded-2xl border border-gray-200 bg-white/60 p-6 dark:border-gray-800 dark:bg-gray-800/40">
+          <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">File Information</h3>
+
+          <div class="grid grid-cols-1 gap-6 text-sm text-gray-800 sm:grid-cols-2 lg:grid-cols-3 dark:text-gray-200">
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">Name</span>
+              <span class="truncate font-medium text-gray-900 dark:text-gray-100">{{ file?.name }}</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">Size</span>
+              <span class="font-medium text-gray-900 dark:text-gray-100">{{ file?.size ? (file.size / (1024 * 1024)).toFixed(2) + ' MB' : '0.00 MB' }}</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">MIME Type</span>
+              <span class="font-medium text-gray-900 dark:text-gray-100">{{ file?.mime_type }}</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">Modified on</span>
+              <span class="font-medium text-gray-900 dark:text-gray-100">{{ formatDate(file?.last_modified_at ?? 0) }}</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">Added on</span>
+              <span class="font-medium text-gray-900 dark:text-gray-100">{{ formatDate(file?.added_at ?? 0) }}</span>
+            </div>
+
+            <div class="flex flex-col gap-1">
+              <span class="text-xs font-medium tracking-wide text-gray-500 uppercase dark:text-gray-400">Extension</span>
+              <span class="font-medium text-gray-900 dark:text-gray-100">{{ file?.extension_type.toUpperCase() }}</span>
+            </div>
           </div>
         </div>
       </div>
@@ -100,26 +110,30 @@ watchEffect(() => {
   if (file.value) {
     isOpen.value = true
     loading.value = true
-    fileUrl.value = file.value.extension_type === 'image' ? getImageUrl(file.value) : getDownloadUrl(file.value)
+    fileUrl.value = file.value.extension_type === 'image' ? buildFileUrl(file.value, 'preview') : buildFileUrl(file.value, 'download')
     showDetails.value = false
   }
 })
 
-function getImageUrl(file: DriveFile) {
+function buildFileUrl(file: DriveFile, type: 'preview' | 'download') {
   const params = new URLSearchParams({
     drive_id: file.drive_id.toString(),
     file_id: file.id.toString()
   })
-  return `/api/drives/files/preview?${params.toString()}`
+  return `/api/drives/files/${type}?${params.toString()}`
 }
 
-function getDownloadUrl(file: DriveFile) {
-  if (!file) return ''
-  const params = new URLSearchParams({
-    drive_id: file.drive_id.toString(),
-    file_id: file.id.toString()
-  })
-  return `/api/drives/files/download?${params.toString()}`
+function downloadFile() {
+  if (!file.value) return
+
+  const downloadUrl = buildFileUrl(file.value, 'download')
+
+  const link = document.createElement('a')
+  link.href = downloadUrl
+  link.download = file.value.name
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
 }
 
 function onImageLoad(e: Event) {
