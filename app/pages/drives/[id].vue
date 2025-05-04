@@ -53,7 +53,7 @@ const groupedFiles = computed(() => {
   const groups: Record<string, DriveFile[]> = {}
   for (const file of files.value) {
     const date = new Date(file.last_modified_at * 1000)
-    const label = date.toLocaleDateString('fr-FR', {
+    const label = date.toLocaleDateString('en-EN', {
       day: '2-digit',
       month: 'long',
       year: 'numeric'
