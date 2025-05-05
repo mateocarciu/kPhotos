@@ -22,6 +22,7 @@ export default defineEventHandler(async (event) => {
     setCookie(event, 'user_token', body.token, {
       httpOnly: true,
       sameSite: 'lax',
+      secure: true,
       path: '/',
       maxAge: 60 * 60 * 24 * 7 // 7 jours
     })
