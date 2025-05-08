@@ -1,27 +1,27 @@
 # kPhotos
 
-kPhotos est une alternative à Google Photos, développée avec Nuxt 3 et Vue.js. Cette application permet de gérer vos fichiers, photos et vidéos de manière intuitive et sécurisée
+kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. This application allows you to manage your files, photos, and videos intuitively and securely.
 
-## Prérequis
+## Prerequisites
 
-- **Scopes nécéssaires du token :** user_info & drive
+- **Required token scopes:** user_info & drive
 
-- [Node.js](https://nodejs.org/) (version 16 ou supérieure)
-- [npm](https://www.npmjs.com/) ou un autre gestionnaire de paquets comme Yarn, pnpm ou Bun.
+- [Node.js](https://nodejs.org/) (version 16 or higher)
+- [npm](https://www.npmjs.com/) or another package manager like Yarn, pnpm, or Bun.
 
-## Fonctionnalités
+## Features
 
-- **Accés aux drives**
-- **Affichage des fichiers** : Visualisez vos fichiers avec des détails comme la taille, le type et la date de modification. Contrairement à l'application web de kDrive, cette application récupère tous les médias du drive (comme le fait l’application mobile) afin de les afficher dans leur intégralité.
-- **Téléchargement :** Téléchargez vos images et vidéos de manière simple
-- **Filtres avancés** : Filtrez vos fichiers par type, date, pertinence ou ordre.
-- **Support multilingue** : Interface disponible en plusieurs langues (coming soon).
-- **Mode sombre** : Basculer entre les thèmes clair et sombre.
-- **Sécurité** : Le token est sotocké côté serveur en httpOnly.
+- **Drive access**
+- **File display:** View your files with details such as size, type, and modification date. Unlike the kDrive web application, this app retrieves all media from the drive (as the mobile app does) to display them in full, regrouped by dates.
+- **Download:** Easily download your images and videos.
+- **Advanced filters:** Filter your files by type, date, relevance, or order.
+- **Multilingual support:** Interface available in multiple languages (coming soon).
+- **Dark mode:** Switch between light and dark themes.
+- **Security:** The token is stored server-side as httpOnly.
 
 ## Installation
 
-Clonez le dépôt et installez les dépendances :
+Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/mateocarciu/kPhotos.git
@@ -35,19 +35,19 @@ cd kPhotos
 yarn install
 ```
 
-Démarrage du serveur de développement
+Start the development server:
 
 ```bash
 yarn dev
 ```
 
-Build pour la production :
+Build for production:
 
 ```bash
 yarn build
 ```
 
-Prévisualisez localement la version de production :
+Preview the production build locally:
 
 ```bash
 yarn preview
