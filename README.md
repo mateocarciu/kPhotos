@@ -52,3 +52,33 @@ Preview the production build locally:
 ```bash
 yarn preview
 ```
+
+## Bugs ?
+
+- **Reversed videos:** Only in Google Chrome QuickTime video are reversed (quick fix by adding a transform).
+
+- **The modified before must be a date before tomorrow:** Trying to filter by custom date :
+  modified_after=1746309600&modified_before=1746482400
+
+date -r 1746309600
+Sun May 4 00:00:00 CEST 2025
+
+date -r 1746482400
+Tue May 6 00:00:00 CEST 2025
+
+Getting : {
+"result": "error",
+"error": {
+"code": "validation_failed",
+"description": "Validation failed",
+"errors": [
+{
+"code": "validation_rule_before",
+"description": "The modified before must be a date before tomorrow.",
+"context": {
+"attribute": "modified_before"
+}
+}
+]
+}
+}

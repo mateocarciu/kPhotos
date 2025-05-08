@@ -10,7 +10,7 @@
       {{ error }}
     </div>
 
-    <div v-else class="relative">
+    <div v-else-if="files.length" class="relative">
       <div v-for="(group, index) in groupedFiles" :key="index" :ref="(el) => sectionRefs.set(group.label, el as HTMLElement)" class="mb-10">
         <div class="sticky top-0 z-10 mb-4 bg-white/80 py-2 text-xl font-semibold text-gray-700 backdrop-blur dark:bg-gray-900/80 dark:text-white">
           {{ group.label }}
@@ -22,6 +22,11 @@
           </div>
         </div>
       </div>
+    </div>
+    <div v-else class="flex flex-col items-center py-10 text-center text-gray-500">
+      <UIcon name="i-heroicons-folder" class="mb-4 h-12 w-12 text-gray-400" />
+      <p class="text-lg font-medium">No files found</p>
+      <p class="text-sm text-gray-400">Try uploading some files or check back later.</p>
     </div>
     <CommonFilesFilters />
     <div ref="infiniteScrollTrigger" class="h-10" />
