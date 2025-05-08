@@ -31,6 +31,19 @@ export default defineEventHandler(async (event) => {
 
     if (query.modified_at) {
       params.append('modified_at', String(query.modified_at))
+
+      if (query.modified_at === 'custom') {
+        const after = Number(query.modified_after)
+        const before = Number(query.modified_before)
+
+        if (!isNaN(after)) {
+          params.append('modified_after', after.toString())
+        }
+
+        if (!isNaN(before)) {
+          params.append('modified_before', before.toString())
+        }
+      }
     }
 
     types.forEach((t) => params.append('types[]', t))

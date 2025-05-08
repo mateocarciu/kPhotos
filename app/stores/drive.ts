@@ -44,6 +44,8 @@ export const useDriveStore = defineStore('drive', () => {
         limit: 20,
         order_by: query.order_by,
         modified_at: query.modified_at,
+        modified_after: query.modified_after,
+        modified_before: query.modified_before,
         order_dir: query.order_dir,
         types: query.types
       })

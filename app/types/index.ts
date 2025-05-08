@@ -178,3 +178,9 @@ export interface Products {
   parent_service_id?: number
   parent_service_name?: string
 }
+
+export type DateFilter = {
+  start: Date | null
+  end: Date | null
+  modified_at: string | null
+}
