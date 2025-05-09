@@ -1,13 +1,13 @@
 <template>
-  <UModal v-model:open="isOpen" :ui="{ content: 'sm:max-w-7xl' }" :title="file?.name" :description="`${file?.extension_type?.toUpperCase()}`" @close="emit('close', false)">
+  <UModal v-model:open="isOpen" :ui="{ content: 'sm:max-w-7xl max-h-[95vh] h-full flex flex-col' }" :title="file?.name" :description="`${file?.extension_type?.toUpperCase()}`" @close="emit('close', false)">
     <template #body>
-      <div class="flex flex-col items-center gap-6 bg-transparent">
-        <div class="relative flex w-full items-center justify-center rounded-xl" style="min-height: 60vh">
+      <div class="flex h-full w-full flex-col items-center justify-center bg-transparent">
+        <div class="relative flex h-full w-full items-center justify-center overflow-hidden">
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-left" class="absolute top-1/2 left-2 z-10 -translate-y-1/2" :disabled="!hasPrevious" @click="navigateToPrevious" />
 
-          <NuxtImg v-if="fileUrl && file?.extension_type === 'image'" ref="imageRef" :src="fileUrl" :alt="file?.name" class="max-h-[calc(80vh-150px)] rounded-xl opacity-0 transition-opacity duration-500" @load="onImageLoad" />
+          <NuxtImg v-if="fileUrl && file?.extension_type === 'image'" :src="fileUrl" :alt="file?.name" class="max-h-full max-w-full rounded-xl object-contain opacity-0 transition-opacity duration-500" @load="onImageLoad" />
 
-          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls controlsList="nodownload" class="max-h-[calc(80vh-150px)] rounded-xl" :style="file?.mime_type === 'video/quicktime' ? { transform: 'rotate(0.01deg)' } : {}" />
+          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls controlsList="nodownload" class="max-h-full max-w-full rounded-xl object-contain" :style="file?.mime_type === 'video/quicktime' ? { transform: 'rotate(0.01deg)' } : {}" />
 
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="absolute top-1/2 right-2 z-10 -translate-y-1/2" :disabled="!hasNext && !hasMore" @click="navigateToNext" />
 
@@ -16,14 +16,14 @@
           </div>
         </div>
 
-        <div class="flex gap-4">
+        <div class="mt-4 flex gap-4">
           <UButton :icon="showDetails ? 'i-heroicons-chevron-up' : 'i-heroicons-chevron-down'" @click="showDetails = !showDetails">
             {{ showDetails ? 'Hide details' : 'Show details' }}
           </UButton>
           <UButton icon="i-heroicons-arrow-down-tray" color="primary" variant="solid" :disabled="!file" @click="downloadFile"> Download </UButton>
         </div>
 
-        <div v-if="showDetails" class="w-full rounded-2xl border border-gray-200 bg-white/60 p-6 dark:border-gray-800 dark:bg-gray-800/40">
+        <div v-if="showDetails" class="mt-2 w-full rounded-2xl border border-gray-200 bg-white/60 p-6 dark:border-gray-800 dark:bg-gray-800/40">
           <h3 class="mb-4 text-lg font-semibold text-gray-900 dark:text-white">File Information</h3>
 
           <div class="grid grid-cols-1 gap-6 text-sm text-gray-800 sm:grid-cols-2 lg:grid-cols-3 dark:text-gray-200">
@@ -70,20 +70,20 @@ import { formatDate } from '#imports'
 const route = useRoute()
 const drive_id = route.params.id as string
 const { files, isLoading, fetchFiles, hasMore } = useDrive()
+const props = defineProps<{ fileId: number }>()
+const currentIndex = ref(-1)
+const toast = useToast()
+const currentFileId = ref(props.fileId)
+const hasPrevious = computed(() => currentIndex.value > 0)
+const hasNext = computed(() => currentIndex.value < files.value.length - 1)
+const isOpen = ref(false)
+const loading = ref(true)
+const fileUrl = ref('')
+const showDetails = ref(false)
 
 const emit = defineEmits<{
   close: [boolean]
 }>()
-
-const props = defineProps<{ fileId: number }>()
-
-const currentIndex = ref(-1)
-const toast = useToast()
-const currentFileId = ref(props.fileId)
-
-watchEffect(() => {
-  currentFileId.value = props.fileId
-})
 
 const file = computed(() => {
   const index = files.value.findIndex((f) => f.id === currentFileId.value)
@@ -96,15 +96,6 @@ watchEffect(() => {
     currentIndex.value = index
   }
 })
-
-const hasPrevious = computed(() => currentIndex.value > 0)
-const hasNext = computed(() => currentIndex.value < files.value.length - 1)
-
-const isOpen = ref(false)
-const loading = ref(true)
-const fileUrl = ref('')
-const showDetails = ref(false)
-const imageRef = ref<HTMLImageElement | null>(null)
 
 watchEffect(() => {
   if (file.value) {
