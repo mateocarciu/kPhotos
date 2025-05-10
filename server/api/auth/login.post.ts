@@ -24,7 +24,8 @@ export default defineEventHandler(async (event) => {
       sameSite: 'lax',
       secure: true,
       path: '/',
-      maxAge: 60 * 60 * 24 * 7 // 7 jours
+      maxAge: 60 * 60 * 24 * 30,
+      expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000)
     })
 
     return { success: true, profile: res.data }

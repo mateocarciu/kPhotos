@@ -6,7 +6,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
   // console.log('Middleware auth', userStore.isLoggedIn, to.path)
 
-  if (process.client && userStore.isLoggedIn && !userStore.profile) {
+  if (import.meta.client && userStore.isLoggedIn && !userStore.profile) {
     await userStore.fetchProfile()
   }
 
