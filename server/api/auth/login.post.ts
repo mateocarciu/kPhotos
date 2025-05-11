@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     setCookie(event, 'user_token', body.token, {
       httpOnly: true,
       sameSite: 'lax',
-      secure: false,
+      secure: false, // Set to true in production, for some reason if setting to true in prod it doesn't work in safari & chrome even if the site is https
       path: '/',
       maxAge: 60 * 60 * 24 * 30,
       expires: new Date(Date.now() + 60 * 60 * 24 * 30 * 1000)
