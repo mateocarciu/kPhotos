@@ -3,10 +3,6 @@ import type { ApiResponse, UserProfile } from '@/types'
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'user_token')
 
-  if (!token) {
-    throw createError({ statusCode: 401, message: 'Unauthorized: No token found' })
-  }
-
   try {
     const res = await $fetch<ApiResponse<{ profile: UserProfile }>>('https://api.infomaniak.com/profile', {
       headers: {

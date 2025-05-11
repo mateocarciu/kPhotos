@@ -9,10 +9,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Drive ID and File ID are required' })
   }
 
-  if (!token) {
-    throw createError({ statusCode: 401, message: 'Unauthorized' })
-  }
-
   const url = `https://api.infomaniak.com/2/drive/${drive_id}/files/${file_id}/preview?width=2500&height=1500&quality=80`
 
   const res = await $fetch.raw(url, {

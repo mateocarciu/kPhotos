@@ -9,7 +9,7 @@
 
       <UForm name="login" class="space-y-4" :state="{ valid: true }" @submit="handleLogin">
         <UFormField help="Enter your Infomaniak API token" class="w-full">
-          <UInput v-model="token" placeholder="Your Infomaniak API token" type="password" icon="i-heroicons-key" autocomplete="off" class="w-full" />
+          <UInput v-model="token" placeholder="Your Infomaniak API token" type="password" icon="i-heroicons-key" autocomplete="off" autofocus class="w-full" />
         </UFormField>
         <UButton color="primary" type="submit" block :loading="isLoading" :disabled="!token"> Log in </UButton>
       </UForm>

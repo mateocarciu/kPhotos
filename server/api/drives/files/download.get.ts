@@ -8,10 +8,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Drive ID and File ID are required' })
   }
 
-  if (!token) {
-    throw createError({ statusCode: 401, message: 'Unauthorized' })
-  }
-
   const response = await $fetch.raw(`https://api.infomaniak.com/2/drive/${drive_id}/files/${file_id}/download`, {
     headers: {
       Authorization: `Bearer ${token}`

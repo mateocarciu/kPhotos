@@ -3,10 +3,6 @@ import type { ApiResponse, Drive, Products } from '@/types'
 export default defineEventHandler(async (event) => {
   const token = getCookie(event, 'user_token')
 
-  if (!token) {
-    throw createError({ statusCode: 401, message: 'Unauthorized' })
-  }
-
   try {
     const productsResponse = await $fetch<ApiResponse<{ data: Products }>>(`https://api.infomaniak.com/1/products`, {
       headers: {

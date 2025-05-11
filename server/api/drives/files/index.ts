@@ -12,10 +12,6 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, message: 'Drive ID is required' })
   }
 
-  if (!token) {
-    throw createError({ statusCode: 401, message: 'Unauthorized' })
-  }
-
   try {
     const typesRaw = query.types
     const types = typeof typesRaw === 'string' ? [typesRaw] : Array.isArray(typesRaw) ? typesRaw : ['image', 'video']
