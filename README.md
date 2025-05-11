@@ -55,30 +55,41 @@ yarn preview
 
 ## Bugs ?
 
-- **Reversed videos:** Only in Google Chrome QuickTime video are reversed (quick fix by adding a transform).
+### Known Issues
 
-- **The modified before must be a date before tomorrow:** Trying to filter by custom date :
-  modified_after=1746309600&modified_before=1746482400
+- **Reversed Videos in Google Chrome:** Videos played in QuickTime within Google Chrome appear reversed. A quick fix involves applying a `transform` property.
 
-date -r 1746309600
-Sun May 4 00:00:00 CEST 2025
+- **Date Validation Error:** When filtering by custom dates using the parameters `modified_after=1746309600` and `modified_before=1746482400`, the following error occurs:
 
-date -r 1746482400
-Tue May 6 00:00:00 CEST 2025
+  ```json
+  {
+    "result": "error",
+    "error": {
+      "code": "validation_failed",
+      "description": "Validation failed",
+      "errors": [
+        {
+          "code": "validation_rule_before",
+          "description": "The modified before must be a date before tomorrow.",
+          "context": {
+            "attribute": "modified_before"
+          }
+        }
+      ]
+    }
+  }
+  ```
 
-Getting : {
-"result": "error",
-"error": {
-"code": "validation_failed",
-"description": "Validation failed",
-"errors": [
-{
-"code": "validation_rule_before",
-"description": "The modified before must be a date before tomorrow.",
-"context": {
-"attribute": "modified_before"
-}
-}
-]
-}
-}
+  Example:
+
+  ```bash
+  date -r 1746309600
+  Sun May 4 00:00:00 CEST 2025
+
+  date -r 1746482400
+  Tue May 6 00:00:00 CEST 2025
+  ```
+
+  Ensure that the `modified_before` parameter is set to a date earlier than tomorrow.
+
+- **Set-Cookie Issue:** When setting the `secure` attribute of cookies to `true` in production, the cookies fail to work in Safari and Chrome, even if the site uses HTTPS. This might be related to domain configuration (`nuxt.dev`). As a temporary workaround, the `secure` attribute is set to `false`.
