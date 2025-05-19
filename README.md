@@ -19,9 +19,20 @@ kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. Th
 - **File display:** View your files with details such as size, type, and modification date. Unlike the kDrive web application, this app retrieves all media from the drive (as the mobile app does) to display them in full, regrouped by dates.
 - **Download:** Easily download your images and videos.
 - **Advanced filters:** Filter your files by type, date, relevance, or order.
-- **Multilingual support:** Interface available in multiple languages (coming soon).
 - **Dark mode:** Switch between light and dark themes.
 - **Security:** The token is stored server-side as httpOnly.
+
+## Incoming features
+
+- **Share:** Share files with others.
+- **Acces specfices folders:** Access specific folders within your drive (not using /search).
+- **Select:** Select multiple files for batch actions.
+- **Favorites:** Mark files as favorites for easy access.
+- **Delete:** Delete files from your drive.
+- **Edit:** Edit files directly within the app.
+- **Zoom:** Zoom in on images for a closer look.
+- **Multilingual support:** Interface available in multiple languages.
+- **Accessibility:** Improved accessibility features for better usability.
 
 ## Installation
 
