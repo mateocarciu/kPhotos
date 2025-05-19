@@ -5,7 +5,7 @@ kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. Th
 ## Demo
 
 <video width="600" controls>
-  <source src="/public/preview.mp4" type="video/mp4">
+  <source src="https://github.com/mateocarciu/kPhotos/blob/master/public/preview.mp4" type="video/mp4">
 </video>
 
 ## Prerequisites
