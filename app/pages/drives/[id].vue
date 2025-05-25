@@ -38,7 +38,7 @@
 
 <script setup lang="ts">
 import type { DriveFile } from '@/types'
-import { useIntersectionObserver } from '@vueuse/core'
+import { useInfiniteScroll } from '@vueuse/core'
 import { ModalsUIFilesDetail } from '#components'
 
 useHead({ title: 'Your drive photos' })
@@ -71,33 +71,24 @@ const groupedFiles = computed(() => {
 
 function openDetail(fileId: number) {
   const overlay = useOverlay()
-  const modal = overlay.create(ModalsUIFilesDetail, { props: { fileId: fileId } })
+  const modal = overlay.create(ModalsUIFilesDetail, { props: { fileId } })
   modal.open()
 }
 
-const onIntersect = () => {
-  if (hasMore.value && !isLoading.value) {
-    fetchFiles(drive_id, false)
+useInfiniteScroll(
+  infiniteScrollTrigger,
+  () => {
+    if (hasMore.value && !isLoading.value) {
+      fetchFiles(drive_id, false)
+    }
+  },
+  {
+    distance: 300,
+    canLoadMore: () => hasMore.value
   }
-}
+)
 
-onMounted(async () => {
-  await fetchFiles(drive_id)
-  await nextTick()
-
-  if (infiniteScrollTrigger.value) {
-    useIntersectionObserver(
-      infiniteScrollTrigger,
-      (entries) => {
-        const entry = entries[0]
-        if (entry?.isIntersecting) onIntersect()
-      },
-      {
-        root: null,
-        rootMargin: '300px',
-        threshold: 0.1
-      }
-    )
-  }
+onMounted(() => {
+  fetchFiles(drive_id)
 })
 </script>
