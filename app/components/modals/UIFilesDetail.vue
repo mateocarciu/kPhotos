@@ -5,11 +5,29 @@
         <div class="relative flex h-full w-full items-center justify-center overflow-hidden">
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-left" class="absolute top-1/2 left-2 z-10 -translate-y-1/2" :disabled="!hasPrevious" @click="navigateToPrevious" />
 
-          <NuxtImg v-if="fileUrl && file?.extension_type === 'image'" :src="fileUrl" :alt="file?.name" class="max-h-full max-w-full rounded-xl object-contain opacity-0 transition-opacity duration-500" @load="onImageLoad" />
+          <div v-if="fileUrl && file?.extension_type === 'image'" ref="imageContainer" class="flex h-full w-full cursor-grab items-center justify-center overflow-hidden" :class="{ 'cursor-grabbing': isDragging }" @wheel.prevent="handleWheel" @mousedown="startDrag" @mousemove="handleDrag" @mouseup="endDrag" @mouseleave="endDrag" @dblclick="handleDoubleClick">
+            <NuxtImg
+              :src="fileUrl"
+              :alt="file?.name"
+              class="pointer-events-none max-h-full max-w-full rounded-xl object-contain opacity-0 transition-opacity duration-500 select-none"
+              :style="{
+                transform: zoomLevel !== 1 || panX !== 0 || panY !== 0 ? `scale(${zoomLevel}) translate(${panX}px, ${panY}px)` : 'none',
+                transformOrigin: 'center center'
+              }"
+              @load="onImageLoad" />
+          </div>
 
           <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls controlsList="nodownload" class="max-h-full max-w-full rounded-xl object-contain" :style="file?.mime_type === 'video/quicktime' ? { transform: 'rotate(0.01deg)' } : {}" />
 
-          <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="absolute top-1/2 right-2 z-10 -translate-y-1/2" :disabled="!hasNext && !hasMore" @click="navigateToNext" />
+          <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="absolute top-1/2 right-2 z-10 -translate-y-1/2" @click="navigateToNext" />
+
+          <div v-if="file?.extension_type === 'image'" class="absolute top-4 right-4 z-20 flex flex-col gap-2">
+            <UButton color="neutral" variant="solid" icon="i-heroicons-plus" size="sm" @click="zoomIn" />
+            <UButton color="neutral" variant="solid" icon="i-heroicons-minus" size="sm" @click="zoomOut" />
+            <UButton color="neutral" variant="solid" icon="i-heroicons-arrow-path" size="sm" @click="resetZoom" />
+          </div>
+
+          <UBadge v-if="file?.extension_type === 'image' && zoomLevel !== 1" class="absolute right-4 bottom-4 z-20 px-3 py-1 text-sm" color="primary" variant="solid"> {{ Math.round(zoomLevel * 100) }}% </UBadge>
 
           <div v-if="loading && file?.extension_type === 'image'" class="absolute inset-0 flex items-center justify-center">
             <div class="h-16 w-16 animate-spin rounded-full border-4 border-gray-300 border-t-(--ui-primary)" />
@@ -81,6 +99,15 @@ const loading = ref(true)
 const fileUrl = ref('')
 const showDetails = ref(false)
 
+// Simple zoom functionality
+const zoomLevel = ref(1)
+const panX = ref(0)
+const panY = ref(0)
+const isDragging = ref(false)
+const lastMouseX = ref(0)
+const lastMouseY = ref(0)
+const imageContainer = ref<HTMLElement>()
+
 const emit = defineEmits<{
   close: [boolean]
 }>()
@@ -103,6 +130,10 @@ watchEffect(() => {
     loading.value = true
     fileUrl.value = file.value.extension_type === 'image' ? buildFileUrl(file.value, 'preview') : buildFileUrl(file.value, 'download')
     showDetails.value = false
+    // Reset zoom when switching files
+    zoomLevel.value = 1
+    panX.value = 0
+    panY.value = 0
   }
 })
 
@@ -167,6 +198,62 @@ async function navigateToNext() {
     } finally {
       loading.value = false
     }
+  }
+}
+
+function zoomIn() {
+  zoomLevel.value = Math.min(zoomLevel.value + 0.3, 5)
+}
+
+function zoomOut() {
+  zoomLevel.value = Math.max(zoomLevel.value - 0.3, 0.5)
+}
+
+function resetZoom() {
+  zoomLevel.value = 1
+  panX.value = 0
+  panY.value = 0
+}
+
+function handleWheel(event: WheelEvent) {
+  if (file.value?.extension_type !== 'image') return
+  event.preventDefault()
+
+  const delta = event.deltaY > 0 ? -0.2 : 0.2
+  zoomLevel.value = Math.min(Math.max(zoomLevel.value + delta, 0.5), 5)
+}
+
+function startDrag(event: MouseEvent) {
+  if (file.value?.extension_type !== 'image' || zoomLevel.value <= 1) return
+  isDragging.value = true
+  lastMouseX.value = event.clientX
+  lastMouseY.value = event.clientY
+}
+
+function handleDrag(event: MouseEvent) {
+  if (!isDragging.value) return
+
+  const deltaX = event.clientX - lastMouseX.value
+  const deltaY = event.clientY - lastMouseY.value
+
+  panX.value += deltaX / zoomLevel.value
+  panY.value += deltaY / zoomLevel.value
+
+  lastMouseX.value = event.clientX
+  lastMouseY.value = event.clientY
+}
+
+function endDrag() {
+  isDragging.value = false
+}
+
+function handleDoubleClick() {
+  if (file.value?.extension_type !== 'image') return
+
+  if (zoomLevel.value === 1) {
+    zoomLevel.value = 2.5
+  } else {
+    resetZoom()
   }
 }
 </script>
