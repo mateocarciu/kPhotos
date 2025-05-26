@@ -7,12 +7,16 @@
 
           <div v-if="fileUrl && file?.extension_type === 'image'" ref="imageContainer" class="flex h-full w-full cursor-grab items-center justify-center overflow-hidden" :class="{ 'cursor-grabbing': isDragging }" @wheel.prevent="handleWheel" @mousedown="startDrag" @mousemove="handleDrag" @mouseup="endDrag" @mouseleave="endDrag" @dblclick="handleDoubleClick">
             <NuxtImg
+              ref="zoomableImage"
               :src="fileUrl"
               :alt="file?.name"
               class="pointer-events-none max-h-full max-w-full rounded-xl object-contain opacity-0 transition-opacity duration-500 select-none"
               :style="{
                 transform: zoomLevel !== 1 || panX !== 0 || panY !== 0 ? `scale(${zoomLevel}) translate(${panX}px, ${panY}px)` : 'none',
-                transformOrigin: 'center center'
+                transformOrigin: 'center center',
+                willChange: zoomLevel !== 1 ? 'transform' : 'auto',
+                backfaceVisibility: 'hidden',
+                imageRendering: 'high-quality'
               }"
               @load="onImageLoad" />
           </div>
