@@ -38,7 +38,7 @@
         </div>
         <template #footer>
           <div class="flex justify-end">
-            <UButton trailing-icon="i-heroicons-arrow-right" variant="solid" @click="handleDriveClick(drive.id)"> Open </UButton>
+            <UButton trailing-icon="i-heroicons-arrow-right" variant="solid" @click="navigateTo(`drives/${drive.id}`)"> Open </UButton>
           </div>
         </template>
       </UCard>
@@ -52,10 +52,6 @@ import { formatDate } from '#imports'
 const { drives, isLoading, error, fetchDrives } = useDrive()
 
 onMounted(fetchDrives)
-
-const handleDriveClick = (drive_id: number) => {
-  navigateTo(`drives/${drive_id}`)
-}
 
 const formatDriveSize = (bytes: number) => {
   if (!bytes) return '0 B'

@@ -23,7 +23,8 @@
         </div>
       </div>
     </div>
-    <div v-else class="flex flex-col items-center py-10 text-center text-gray-500">
+
+    <div v-else-if="shouldShowEmptyState" class="flex flex-col items-center py-10 text-center text-gray-500">
       <UIcon name="i-heroicons-folder" class="mb-4 h-12 w-12 text-gray-400" />
       <p class="text-lg font-medium">No files found</p>
       <p class="text-sm text-gray-400">Try uploading some files or check back later.</p>
@@ -48,11 +49,16 @@ const route = useRoute()
 const drive_id = route.params.id as string
 const sectionRefs = ref(new Map<string, HTMLElement>())
 const infiniteScrollTrigger = ref<HTMLElement | null>(null)
+const hasInitiallyLoaded = ref(false)
 
 const loadedImages = ref<Set<number>>(new Set())
 function onImageLoad(fileId: number) {
   loadedImages.value.add(fileId)
 }
+
+const shouldShowEmptyState = computed(() => {
+  return hasInitiallyLoaded.value && !isLoading.value && !error.value && files.value.length === 0
+})
 
 const groupedFiles = computed(() => {
   const groups: Record<string, DriveFile[]> = {}
@@ -88,7 +94,16 @@ useInfiniteScroll(
   }
 )
 
-onMounted(() => {
-  fetchFiles(drive_id)
+onMounted(async () => {
+  await fetchFiles(drive_id)
+
+  if (files.value.length > 0) {
+    hasInitiallyLoaded.value = true
+  } else {
+    // attendre pour éviter le flash "No files found"
+    setTimeout(() => {
+      hasInitiallyLoaded.value = true
+    }, 300)
+  }
 })
 </script>

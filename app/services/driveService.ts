@@ -10,3 +10,10 @@ export const fetchFiles = (drive_id: string, params?: { cursor?: string; order_b
       ...params
     }
   })
+
+export const fetchFolders = (drive_id: string) =>
+  useApiFetch<{ data: DriveFile[] }>('/api/drives/folders', {
+    params: {
+      drive_id
+    }
+  })

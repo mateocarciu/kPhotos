@@ -4,6 +4,7 @@ import * as driveService from '~/services/driveService'
 export const useDriveStore = defineStore('drive', () => {
   const drives = ref<Drive[]>([])
   const files = ref<DriveFile[]>([])
+  const folders = ref<DriveFile[]>([])
   const cursor = ref<string | null>(null)
   const hasMore = ref(true)
   const isLoading = ref(false)
@@ -67,12 +68,31 @@ export const useDriveStore = defineStore('drive', () => {
     }
   }
 
+  const fetchFolders = async (drive_id: string) => {
+    isLoading.value = true
+    error.value = null
+    try {
+      const res = await driveService.fetchFolders(drive_id)
+      if (res?.data?.data) {
+        const fetched = Array.isArray(res.data.data) ? res.data.data : [res.data.data]
+        folders.value = fetched
+      }
+    } catch (err) {
+      error.value = 'Failed to fetch folders'
+      console.error('Folder fetch error:', err)
+    } finally {
+      isLoading.value = false
+    }
+  }
+
   return {
     drives,
     hasMore,
     files,
+    folders,
     isLoading,
     error,
+    fetchFolders,
     fetchFiles,
     fetchDrives
   }

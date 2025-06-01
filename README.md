@@ -30,7 +30,7 @@ kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. Th
 - **Favorites:** Mark files as favorites for easy access.
 - **Delete:** Delete files from your drive.
 - **Edit:** Edit files directly within the app.
-- **Zoom:** Zoom in on images for a closer look.
+- ~~**Zoom:** Zoom in on images for a closer look.~~
 - **Multilingual support:** Interface available in multiple languages.
 - **Accessibility:** Improved accessibility features for better usability.
 

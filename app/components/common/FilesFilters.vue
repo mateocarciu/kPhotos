@@ -8,6 +8,7 @@
         <USelectMenu v-model="filters.order_by" :items="orderOptions" option-attribute="label" :search-input="false" placeholder="Order by" class="w-32" @update:model-value="updateFilters" />
         <USelectMenu v-model="filters.order_dir" :items="['asc', 'desc']" placeholder="Direction" :search-input="false" class="w-32" @update:model-value="updateFilters" />
         <UButton icon="i-heroicons-trash" color="error" variant="soft" @click="resetFilters" />
+        <!-- {{ folders }} -->
       </div>
     </template>
   </UPopover>
@@ -17,8 +18,16 @@
 import type { DateFilter } from '~/types'
 
 const store = useDriveStore()
+const { folders, fetchFolders } = useDrive()
 const route = useRoute()
 const router = useRouter()
+
+// fetch client side
+onMounted(() => {
+  if (!folders.value.length) {
+    fetchFolders(route.params.id as string)
+  }
+})
 
 const fileTypes = ['image', 'video']
 
