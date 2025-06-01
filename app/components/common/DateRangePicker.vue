@@ -12,7 +12,7 @@
         <aside class="hidden flex-col sm:flex">
           <UButton v-for="option in shortcuts" :key="option.id" class="rounded-none px-4 text-left hover:bg-(--ui-bg-elevated)" variant="ghost" color="neutral" :label="option.label" @click="applyShortcut(option)" />
         </aside>
-        <UCalendar v-model="internalRange" :number-of-months="2" range class="p-2" />
+        <UCalendar v-model="internalRange" :number-of-months="numberOfMonths" range class="p-2" />
       </div>
     </template>
   </UPopover>
@@ -36,6 +36,13 @@ const shortcuts = [
   { id: 'this_year', label: 'This Year' }
 ]
 const toCalendarDate = (d: Date) => new CalendarDate(d.getFullYear(), d.getMonth() + 1, d.getDate())
+
+const numberOfMonths = computed(() => {
+  if (import.meta.client) {
+    return window.innerWidth < 640 ? 1 : 2
+  }
+  return 2
+})
 
 const internalRange = computed({
   get: () => ({
