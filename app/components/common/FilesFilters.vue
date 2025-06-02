@@ -7,8 +7,8 @@
         <CommonDateRangePicker v-model="selected" @date-updated="updateFilters" />
         <USelectMenu v-model="filters.order_by" :items="orderOptions" option-attribute="label" :search-input="false" placeholder="Order by" class="w-32" @update:model-value="updateFilters" />
         <USelectMenu v-model="filters.order_dir" :items="['asc', 'desc']" placeholder="Direction" :search-input="false" class="w-32" @update:model-value="updateFilters" />
+        <USelectMenu v-model="filters.folder" :items="foldersOptions" placeholder="Folder" :search-input="false" class="w-32" @update:model-value="updateFilters" />
         <UButton icon="i-heroicons-trash" color="error" variant="soft" @click="resetFilters" />
-        <!-- {{ folders }} -->
       </div>
     </template>
   </UPopover>
@@ -29,6 +29,13 @@ onMounted(() => {
   }
 })
 
+const foldersOptions = computed(() => {
+  return folders.value.map((folder) => ({
+    id: folder.id,
+    label: folder.name
+  }))
+})
+
 const fileTypes = ['image', 'video']
 
 const orderOptions = [
@@ -39,7 +46,8 @@ const orderOptions = [
 const filters = reactive({
   types: route.query.types ? (Array.isArray(route.query.types) ? route.query.types.filter((type): type is string => typeof type === 'string') : typeof route.query.types === 'string' ? [route.query.types] : []) : [],
   order_by: orderOptions.find((o) => o.value === route.query.order_by) || orderOptions[0],
-  order_dir: typeof route.query.order_dir === 'string' && ['asc', 'desc'].includes(route.query.order_dir) ? route.query.order_dir : 'desc'
+  order_dir: typeof route.query.order_dir === 'string' && ['asc', 'desc'].includes(route.query.order_dir) ? route.query.order_dir : 'desc',
+  folder: route.query.folder ? (Array.isArray(route.query.folder) ? route.query.folder.filter((f): f is string => typeof f === 'string') : typeof route.query.folder === 'string' ? [route.query.folder] : []) : []
 })
 
 const selected = ref<DateFilter>({
@@ -77,6 +85,7 @@ const updateFilters = () => {
     types: filters.types.length ? filters.types : undefined,
     order_by: filters.order_by?.value || undefined,
     order_dir: filters.order_dir || undefined,
+    folder: filters.folder.length ? filters.folder : undefined,
     modified_at: isPresetDate ? selected.value.modified_at : hasDateRange ? 'custom' : undefined,
     modified_after: isCustomDate && selected.value.start ? Math.floor(selected.value.start.getTime() / 1000) : undefined,
     modified_before: isCustomDate && selected.value.end ? Math.floor(selected.value.end.getTime() / 1000) : undefined
@@ -89,6 +98,7 @@ const updateFilters = () => {
   let apiParams = {
     order_by: filters.order_by?.value,
     order_dir: filters.order_dir,
+    folder: filters.folder.length ? filters.folder : undefined,
     types: filters.types.length ? filters.types : undefined,
     modified_at: isPresetDate ? selected.value.modified_at : hasDateRange ? 'custom' : undefined,
     modified_after: isCustomDate && selected.value.start ? Math.floor(selected.value.start.getTime() / 1000) : undefined,
@@ -98,6 +108,7 @@ const updateFilters = () => {
   apiParams = Object.fromEntries(Object.entries(apiParams).filter(([_, value]) => value !== undefined)) as {
     order_by: string | undefined
     order_dir: string
+    folder: string[] | undefined
     types: string[] | undefined
     modified_at: string | null | undefined
     modified_after: number | undefined
@@ -109,6 +120,7 @@ const updateFilters = () => {
 
 const resetFilters = () => {
   filters.types = []
+  filters.folder = []
   filters.order_by = orderOptions[0]
   filters.order_dir = 'desc'
   selected.value = {
