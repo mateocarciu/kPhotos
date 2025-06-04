@@ -18,6 +18,7 @@ export default defineEventHandler(async (event) => {
 
     const order_by = query.order_by ?? 'last_modified_at'
     const order_dir = query.order_dir ?? 'desc'
+    const directory_id = query.directory_id as string | undefined
 
     const params = new URLSearchParams()
     if (cursor) params.append('cursor', cursor)
@@ -41,6 +42,8 @@ export default defineEventHandler(async (event) => {
         }
       }
     }
+
+    if (directory_id) params.append('directory_id', directory_id)
 
     types.forEach((t) => params.append('types[]', t))
 
