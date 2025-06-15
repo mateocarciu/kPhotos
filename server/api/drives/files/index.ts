@@ -45,6 +45,8 @@ export default defineEventHandler(async (event) => {
 
     if (directory_id) params.append('directory_id', directory_id)
 
+    params.append('with', 'is_favorite')
+
     types.forEach((t) => params.append('types[]', t))
 
     const url = `https://api.infomaniak.com/3/drive/${drive_id}/files/search?${params.toString()}`
