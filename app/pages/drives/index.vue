@@ -29,7 +29,7 @@
         <div class="space-y-2 text-sm text-gray-600 dark:text-gray-300">
           <div class="flex justify-between">
             <span class="font-medium">Used</span>
-            <span> {{ formatDriveSize(drive.used_size) }} / {{ formatDriveSize(drive.size) }} </span>
+            <span> {{ formatBytes(drive.used_size) }} / {{ formatBytes(drive.size) }} </span>
           </div>
 
           <UProgress v-model="drive.used_size" :max="drive.size" color="primary" size="sm" status class="rounded-full" />
@@ -47,17 +47,9 @@
 </template>
 
 <script setup lang="ts">
-import { formatDate } from '#imports'
+import { formatDate, formatBytes } from '#imports'
 
 const { drives, isLoading, error, fetchDrives } = useDrive()
 
 onMounted(fetchDrives)
-
-const formatDriveSize = (bytes: number) => {
-  if (!bytes) return '0 B'
-  const k = 1024
-  const sizes = ['B', 'KB', 'MB', 'GB', 'TB']
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
-}
 </script>
