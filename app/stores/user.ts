@@ -1,20 +1,15 @@
-import { fetchProfile, login, logout } from '~/services/userService'
+import { useApiFetch } from '~/utils/useApiFetch'
 import type { UserProfile } from '~/types'
 
 export const useUserStore = defineStore('user', () => {
   const profile = ref<UserProfile | null>(null)
   const isLoading = ref(false)
   const tokenCookie = useCookie('user_token').value
-
   const isLoggedIn = ref(!!tokenCookie?.length)
-
-  const clearProfile = () => {
-    profile.value = null
-  }
 
   const fetchProfileAction = async () => {
     isLoading.value = true
-    const { data } = await fetchProfile()
+    const { data } = await useApiFetch<{ profile: UserProfile }>('/api/account/profile')
     if (data?.profile) profile.value = data.profile
     isLoading.value = false
   }
@@ -22,7 +17,10 @@ export const useUserStore = defineStore('user', () => {
   const loginAction = async (token: string) => {
     const toast = useToast()
     isLoading.value = true
-    const { data } = await login(token)
+    const { data } = await useApiFetch<{ profile: UserProfile }>('/api/auth/login', {
+      method: 'POST',
+      body: { token }
+    })
     if (data?.profile) {
       profile.value = data.profile
       isLoggedIn.value = true
@@ -35,9 +33,11 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const logoutAction = async () => {
-    await logout()
+    await useApiFetch('/api/auth/logout', {
+      method: 'POST'
+    })
     isLoggedIn.value = false
-    clearProfile()
+    profile.value = null
     navigateTo('/login')
   }
 
@@ -47,7 +47,6 @@ export const useUserStore = defineStore('user', () => {
     isLoggedIn,
     fetchProfile: fetchProfileAction,
     login: loginAction,
-    logout: logoutAction,
-    clearProfile
+    logout: logoutAction
   }
 })

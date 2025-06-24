@@ -52,4 +52,5 @@ import { formatDate, formatBytes } from '#imports'
 const { drives, isLoading, error, fetchDrives } = useDrive()
 
 onMounted(fetchDrives)
+// await callOnce(fetchDrives)
 </script>

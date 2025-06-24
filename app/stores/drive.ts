@@ -1,5 +1,5 @@
 import type { Drive, DriveFile } from '~/types'
-import * as driveService from '~/services/driveService'
+import { useApiFetch } from '~/utils/useApiFetch'
 
 export const useDriveStore = defineStore('drive', () => {
   const drives = ref<Drive[]>([])
@@ -15,8 +15,10 @@ export const useDriveStore = defineStore('drive', () => {
     error.value = null
 
     try {
-      const res = await driveService.fetchDrives()
-      drives.value = Array.isArray(res?.data?.data) ? (res.data.data as Drive[]) : []
+      const res = await useApiFetch<{ data: Drive[] }>('/api/drives')
+      if (res?.data?.data && Array.isArray(res.data.data)) {
+        drives.value = Array.isArray(res?.data?.data) ? (res.data.data as Drive[]) : []
+      }
     } catch (err) {
       error.value = 'Failed to fetch files'
       console.error('Drive fetch error:', err)
@@ -40,16 +42,19 @@ export const useDriveStore = defineStore('drive', () => {
     const query = filtersOverride || useRoute().query
 
     try {
-      const res = await driveService.fetchFiles(drive_id, {
-        cursor: isInitial ? undefined : (cursor.value ?? undefined),
-        limit: 20,
-        order_by: query.order_by,
-        modified_at: query.modified_at,
-        modified_after: query.modified_after,
-        modified_before: query.modified_before,
-        order_dir: query.order_dir,
-        types: query.types,
-        directory_id: query.directory_id
+      const res = await useApiFetch<{ data: DriveFile[]; cursor?: string; has_more?: boolean }>('/api/drives/files', {
+        params: {
+          drive_id,
+          cursor: isInitial ? undefined : (cursor.value ?? undefined),
+          limit: 20,
+          order_by: query?.order_by,
+          modified_at: query?.modified_at,
+          modified_after: query?.modified_after,
+          modified_before: query?.modified_before,
+          order_dir: query?.order_dir,
+          types: query?.types,
+          directory_id: query?.directory_id
+        }
       })
 
       if (res?.data?.data) {
@@ -73,7 +78,11 @@ export const useDriveStore = defineStore('drive', () => {
     isLoading.value = true
     error.value = null
     try {
-      const res = await driveService.fetchFolders(drive_id)
+      const res = await useApiFetch<{ data: DriveFile[] }>('/api/drives/folders', {
+        params: {
+          drive_id
+        }
+      })
       if (res?.data?.data) {
         const fetched = Array.isArray(res.data.data) ? res.data.data : [res.data.data]
         folders.value = fetched
