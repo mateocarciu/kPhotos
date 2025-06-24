@@ -9,7 +9,7 @@ export async function useApiFetch<T>(url: string, options: Record<string, unknow
 
     return { data, error: null }
   } catch (error: unknown) {
-    if ((error as { statusCode?: number })?.statusCode === 401) {
+    if ((error as { statusCode?: number })?.statusCode === 401 && userStore.isLoggedIn) {
       await userStore.logout()
     }
 

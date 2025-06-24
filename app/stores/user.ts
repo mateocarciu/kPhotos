@@ -2,6 +2,7 @@ import { useApiFetch } from '~/utils/useApiFetch'
 import type { UserProfile } from '~/types'
 
 export const useUserStore = defineStore('user', () => {
+  const toast = useToast()
   const profile = ref<UserProfile | null>(null)
   const isLoading = ref(false)
   const tokenCookie = useCookie('user_token').value
@@ -9,27 +10,47 @@ export const useUserStore = defineStore('user', () => {
 
   const fetchProfileAction = async () => {
     isLoading.value = true
-    const { data } = await useApiFetch<{ profile: UserProfile }>('/api/account/profile')
-    if (data?.profile) profile.value = data.profile
-    isLoading.value = false
+    try {
+      const { data } = await useApiFetch<{ profile: UserProfile }>('/api/account/profile')
+      if (data?.profile) {
+        profile.value = data.profile
+        isLoggedIn.value = true
+      } else {
+        profile.value = null
+        isLoggedIn.value = false
+      }
+    } catch (error) {
+      console.error('Failed to fetch user profile:', error)
+      profile.value = null
+      isLoggedIn.value = false
+    } finally {
+      isLoading.value = false
+    }
   }
 
   const loginAction = async (token: string) => {
-    const toast = useToast()
     isLoading.value = true
-    const { data } = await useApiFetch<{ profile: UserProfile }>('/api/auth/login', {
-      method: 'POST',
-      body: { token }
-    })
-    if (data?.profile) {
-      profile.value = data.profile
-      isLoggedIn.value = true
-      toast.add({ title: 'Logged in', color: 'success' })
-      navigateTo('/drives')
-    } else {
+    try {
+      const { data } = await useApiFetch<{ profile: UserProfile }>('/api/auth/login', {
+        method: 'POST',
+        body: { token }
+      })
+      if (data?.profile) {
+        profile.value = data.profile
+        isLoggedIn.value = true
+        toast.add({ title: 'Logged in', color: 'success' })
+        navigateTo('/drives')
+      } else {
+        toast.add({ title: 'Login failed', color: 'error' })
+      }
+    } catch (error) {
+      console.error('Login error:', error)
       toast.add({ title: 'Login failed', color: 'error' })
+      isLoggedIn.value = false
+      profile.value = null
+    } finally {
+      isLoading.value = false
     }
-    isLoading.value = false
   }
 
   const logoutAction = async () => {
