@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-app",
+  "name": "kphotos",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,15 +14,15 @@
   "dependencies": {
     "@iconify-json/lucide": "^1.2.34",
     "@iconify-json/simple-icons": "^1.2.30",
-    "@nuxt/fonts": "0.11.1",
-    "@nuxt/icon": "1.11.0",
+    "@nuxt/fonts": "0.11.4",
+    "@nuxt/icon": "1.13.0",
     "@nuxt/image": "1.10.0",
-    "@nuxt/test-utils": "3.17.2",
-    "@nuxt/ui": "^3.0.2",
-    "@nuxthub/core": "0.8.25",
-    "@pinia/nuxt": "^0.10.1",
-    "nuxt": "^3.16.2",
-    "pinia": "^3.0.1"
+    "@nuxt/test-utils": "3.19.1",
+    "@nuxt/ui": "^3.1.3",
+    "@nuxthub/core": "0.9.0",
+    "@pinia/nuxt": "^0.11.1",
+    "nuxt": "^3.17.5",
+    "pinia": "^3.0.3"
   },
   "devDependencies": {
     "@nuxt/eslint": "^1.3.0",
