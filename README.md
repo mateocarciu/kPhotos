@@ -35,6 +35,7 @@ Infomaniak's OAuth2 does not provide the necessary scopes required for this appl
 ## Incoming features
 
 - **Share:** Share files with others.
+- **Preferences:** Save preferences, such as default drive, filters etc..
 - ~~**Access specific folders:** Access specific folders within your drive (not using /search).~~
 - **Select:** Select multiple files for batch actions.
 - **Favorites:** Mark files as favorites for easy access.
