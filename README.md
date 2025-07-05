@@ -6,6 +6,16 @@ kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. Th
 
 ![Preview](/public/preview.gif)
 
+## Questions
+
+### Is this projet affiliated with Infomaniak?
+
+No, kPhotos is an independent project and is not affiliated with Infomaniak. It is developed as a side project, alternative interface for managing files (photos & videos) on the Infomaniak platform.
+
+### Why can't I access kPhotos using Infomaniak's OAuth2?
+
+Infomaniak's OAuth2 does not provide the necessary scopes required for this application to function properly. Therefore, you must use a personal token by generating it from your Infomaniak account with the required scopes (`user_info` and `drive`) to access kPhotos.
+
 ## Prerequisites
 
 - **Required token scopes:** user_info & drive
