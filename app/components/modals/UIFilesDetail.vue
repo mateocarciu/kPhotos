@@ -21,7 +21,7 @@
               @load="onImageLoad" />
           </div>
 
-          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls controlsList="nodownload" class="max-h-full max-w-full rounded-xl object-contain" :style="file?.mime_type === 'video/quicktime' ? { transform: 'rotate(0.01deg)' } : {}" />
+          <video v-if="fileUrl && file?.extension_type === 'video'" :src="fileUrl" controls controlsList="nodownload" class="max-h-full max-w-full rounded-xl object-contain" />
 
           <UButton color="neutral" variant="solid" icon="i-heroicons-chevron-right" class="absolute top-1/2 right-2 z-10 -translate-y-1/2" @click="navigateToNext" />
 
