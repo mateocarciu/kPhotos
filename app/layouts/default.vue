@@ -1,12 +1,11 @@
 <template>
   <UApp>
-    <div class="flex min-h-screen flex-col bg-white dark:bg-neutral-900">
-      <DefaultNavbar />
-      <UContainer class="w-full">
+    <DefaultNavbar />
+    <UMain>
+      <UContainer>
         <NuxtPage />
       </UContainer>
-      <CommonScrollToTop />
-      <DefaultFooter />
-    </div>
+    </UMain>
+    <DefaultFooter />
   </UApp>
 </template>
