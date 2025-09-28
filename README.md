@@ -1,6 +1,6 @@
 # kPhotos
 
-kPhotos is an alternative to Google Photos, developed with Nuxt 3 and Vue.js. This application allows you to manage your files, photos, and videos intuitively and securely by accessing the Infomaniak Api.
+kPhotos is an alternative to Google Photos, developed with Nuxt 4 and Vue.js. This application allows you to manage your files, photos, and videos intuitively and securely by accessing the Infomaniak Api.
 
 ## Demo
 
