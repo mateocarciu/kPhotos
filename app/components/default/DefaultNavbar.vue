@@ -3,7 +3,7 @@
     <UContainer class="flex h-14 items-center justify-between">
       <NuxtLink to="/">kPhotos</NuxtLink>
       <div class="flex gap-2">
-        <ColorModeButton />
+        <UColorModeButton />
         <NavbarProfile />
       </div>
     </UContainer>
