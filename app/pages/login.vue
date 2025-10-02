@@ -1,5 +1,5 @@
 <template>
-  <UContainer class="max-w-md pt-20">
+  <UContainer class="mt-20 max-w-md">
     <UCard>
       <template #header>
         <div class="flex justify-center">
@@ -7,7 +7,7 @@
         </div>
       </template>
 
-      <UForm class="space-y-4" :state="{ valid: true }" @submit="handleLogin">
+      <UForm name="login" class="space-y-4" :state="{ valid: true }" @submit="handleLogin">
         <UFormField help="Enter your Infomaniak API token" class="w-full">
           <UInput v-model="token" placeholder="Your Infomaniak API token" type="password" icon="i-heroicons-key" autocomplete="off" autofocus class="w-full" />
         </UFormField>
