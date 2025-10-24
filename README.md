@@ -58,25 +58,25 @@ cd kPhotos
 ```
 
 ```bash
-yarn install
+npm install
 ```
 
 Start the development server:
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 Build for production:
 
 ```bash
-yarn build
+npm run build
 ```
 
 Preview the production build locally:
 
 ```bash
-yarn preview
+npm run preview
 ```
 
 ## Bugs ?
