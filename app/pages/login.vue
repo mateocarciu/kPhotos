@@ -10,8 +10,7 @@
       <UForm class="space-y-4" :state="{ valid: true }" @submit="handleLogin">
         <UFormField class="w-full">
           <template #help>
-            <div class="text-muted relative flex items-center gap-1.5 text-xs">
-              <UIcon name="i-heroicons-information-circle" class="size-4" />
+            <div class="text-muted relative flex justify-end gap-1.5 text-xs">
               <span ref="triggerRef" class="cursor-help underline decoration-dotted" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false"> Why can't I use OAuth2 ? </span>
               <Transition enter-active-class="transition ease-out duration-200" enter-from-class="opacity-0 scale-95" enter-to-class="opacity-100 scale-100" leave-active-class="transition ease-in duration-150" leave-from-class="opacity-100 scale-100" leave-to-class="opacity-0 scale-95">
                 <div v-if="showTooltip" class="fixed z-[9999] w-80 rounded-lg border border-gray-200 bg-white p-4 shadow-xl dark:border-gray-700 dark:bg-gray-900" :style="tooltipStyle" @mouseenter="showTooltip = true" @mouseleave="showTooltip = false">
